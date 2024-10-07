@@ -1,0 +1,29 @@
+###
+GET http://localhost:8080/asiento/T/A1/SILLAS HTTP/1.1
+content-type: application/json
+
+###
+POST http://localhost:8080/compra HTTP/1.1
+content-type: application/json
+
+{
+    "localidad": "T",
+    "zona": "A1",
+    "tipo": "SILLAS",
+    "asientosSeleccionados": [118,119],
+    "tipoCompra": "N",
+    "sitioVenta":"rsc-v-2"
+
+}
+
+###
+###
+PATCH http://localhost:8080/asiento/limpiar-no-abonado HTTP/1.1
+content-type: application/json
+
+{
+    "localidad": "T",
+    "zona": "A1",
+    "tipo": "SILLAS",
+    "asientosSeleccionados": [118,119]
+}
