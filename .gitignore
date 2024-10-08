@@ -1,10 +1,10 @@
 . env
-/target
+/target/
 HELP.md
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.env
+
 ./src/main/resources/application.properties
 ### STS ###
 .apt_generated
@@ -33,3 +33,5 @@ build/
 
 ### VS Code ###
 .vscode/
+target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
