@@ -1,0 +1,35 @@
+
+services:
+  ticketsapp:
+    env_file:
+      - .env
+    depends_on:
+      - db
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: tickets-app
+    container_name: ticketsapp
+    restart: always # reiniciar el contenedor si se detiene
+    ports:
+      - 8080:8080
+    # working_dir: /var/www/pokedex
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+
+  db:
+    image: mysql:8.3
+    env_file:
+      - .env
+    container_name: mysql-tickets
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: ticketsdb
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./mysql:/var/lib/mysql

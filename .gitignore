@@ -1,10 +1,11 @@
-. env
+.env
 /target/
 HELP.md
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+/mysql
 ./src/main/resources/application.properties
 ### STS ###
 .apt_generated
