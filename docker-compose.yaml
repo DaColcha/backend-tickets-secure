@@ -13,7 +13,6 @@ services:
     restart: always # reiniciar el contenedor si se detiene
     ports:
       - 8080:8080
-    # working_dir: /var/www/pokedex
     environment:
       DB_HOST: ${DB_HOST}
       DB_USER: ${DB_USER}
