@@ -1,4 +1,4 @@
-
+name: backend-ticketplay
 services:
   ticketsapp:
     env_file:
