@@ -1,34 +1,16 @@
-name: backend-ticketplay
+name: db-ticketplay
 services:
-  ticketsapp:
-    env_file:
-      - .env
-    depends_on:
-      - db
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    image: tickets-app
-    container_name: ticketsapp
-    restart: always # reiniciar el contenedor si se detiene
-    ports:
-      - 8080:8080
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-
 
   db:
-    image: mysql:8.3
+    image: postgres:16-alpine3.20
     env_file:
       - .env
-    container_name: mysql-tickets
+    container_name: postgres-tickets
     restart: always
     ports:
-      - 3306:3306
+      - "5435:5432"
     environment:
-      MYSQL_DATABASE: ticketsdb
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ticketsdb
     volumes:
-      - ./mysql:/var/lib/mysql
+      - ./postgresql:/var/lib/postgresql/data
