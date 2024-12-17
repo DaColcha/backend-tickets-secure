@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "credenciales")
-public class Credenciale {
+public class Credenciales {
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;

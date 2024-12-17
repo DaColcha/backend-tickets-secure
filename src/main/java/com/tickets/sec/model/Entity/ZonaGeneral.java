@@ -32,4 +32,7 @@ public class ZonaGeneral {
         this.disponibles = disponibles;
     }
 
+    public ZonaGeneral() {
+
+    }
 }

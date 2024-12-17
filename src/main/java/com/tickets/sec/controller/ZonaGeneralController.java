@@ -1,6 +1,9 @@
 package com.tickets.sec.controller;
 
+import com.tickets.sec.model.Entity.SitioVenta;
+import com.tickets.sec.model.Entity.Venta;
 import com.tickets.sec.model.Entity.ZonaGeneral;
+import com.tickets.sec.repository.VentaRepository;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tickets.sec.repository.SitioVentaRepository;
@@ -17,16 +20,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/general")
 public class ZonaGeneralController {
 
     @Autowired
-    private CompradorController compradorController;
+    private AbonadoController abonadoController;
     @Autowired
     private ZonaGeneralRepository zonaGeneralRepository;
     @Autowired
     private SitioVentaRepository sitioVentaRepository;
+    @Autowired
+    private VentaRepository ventaRepository;
 
     @GetMapping("/{zona}")
     public Integer getDisponibilidad(@PathVariable String zona) {
@@ -35,10 +42,10 @@ public class ZonaGeneralController {
 
     @PostMapping("/compra")
     public ResponseEntity<String> compraGeneral(@RequestBody ZonaGeneral zonaGeneralCompra) {
-        Integer boletosComprados = zonaGeneralCompra.getBoletos();
-        Integer boletosDisponibles = getDisponibilidad(zonaGeneralCompra.getZona());
+        Integer boletosComprados = zonaGeneralCompra.getDisponibles();
+        Integer boletosDisponibles = getDisponibilidad(zonaGeneralCompra.getLocalidad());
         if (boletosDisponibles >= boletosComprados) {
-            zonaGeneralCompra.setBoletos(boletosDisponibles - boletosComprados);
+            zonaGeneralCompra.setDisponibles(boletosDisponibles - boletosComprados);
             zonaGeneralRepository.save(zonaGeneralCompra);
             return ResponseEntity.ok("Compra exitosa");
         } else {
@@ -49,32 +56,33 @@ public class ZonaGeneralController {
 
     @SuppressWarnings("null")
     @PostMapping("/compra/abonado")
-    public ResponseEntity<String> compraGeneralAbonado(@RequestBody AbonadosGeneral compra) {
+    public ResponseEntity<String> compraGeneralAbonado(@RequestBody Venta compra) {
 
-        SitioVenta sitioVenta = sitioVentaRepository.findByNombreSitio(compra.getSitioVenta().getNombreSitio());
+        SitioVenta sitioVenta = sitioVentaRepository.findByNombreSitio(compra.getVendedor().getSitioVenta().getNombre());
 
-        Integer boletosComprados = compra.getCantidadBoletos();
-        Integer boletosDisponibles = getDisponibilidad(compra.getZona());
-        ZonaGeneral updateZona = new ZonaGeneral();
+        Integer boletosComprados = compra.getVentaZonaGeneral().getCantidad();
+        Integer boletosDisponibles = getDisponibilidad(compra.getVentaZonaGeneral().getZonaGeneral().getLocalidad());
+
 
         if (boletosDisponibles >= boletosComprados) {
-            compra.setComprador(compradorController.guardarComprador(compra.getComprador()));
-            AbonadosGeneral idAux = abonadosGeneralRepository.findTopByOrderByIdCompraDesc();
-            Integer id = (idAux != null) ? idAux.getIdCompra() + 1 : 1;
+            compra.setAbonado(abonadoController.guardarAbonado(compra.getAbonado()));
 
-            AbonadosGeneral abonado = new AbonadosGeneral(
-                    id,
-                    compra.getZona(),
-                    compra.getComprador(),
-                    boletosComprados,
-                    sitioVenta,
+
+            Venta ventaGeneral = new Venta(
+                    null,
+                    compra.getVentaZonaGeneral(),
                     compra.getPago(),
-                    compra.getPlazo());
+                    compra.getVendedor(),
+                    compra.getAbonado(),
+                    new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate(),
+                    compra.getTotalVenta()
+            );
 
-            updateZona.setZona(compra.getZona());
-            updateZona.setBoletos(boletosDisponibles - boletosComprados);
+            ZonaGeneral updateZona = new ZonaGeneral();
+            updateZona.setLocalidad(compra.getVentaZonaGeneral().getZonaGeneral().getLocalidad());
+            updateZona.setDisponibles(boletosDisponibles - boletosComprados);
             zonaGeneralRepository.save(updateZona);
-            abonadosGeneralRepository.save(abonado);
+            ventaRepository.save(ventaGeneral);
 
             return ResponseEntity.ok("Compra exitosa");
         } else {
@@ -86,15 +94,14 @@ public class ZonaGeneralController {
     @PatchMapping("/limpiar-todo")
     public ResponseEntity<String> limpiarGeneralTodo() {
         zonaGeneralRepository.restartGeneral();
-        abonadosGeneralRepository.cleanAbonadosGeneral();
         return ResponseEntity.ok("Limpieza exitosa");
     }
 
     @Transactional
     @PatchMapping("/limpiar")
     public ResponseEntity<String> limpiarGeneral() {
-        Integer boletosA = abonadosGeneralRepository.cantidadBoletosAbonadosByZona("A");
-        Integer boletosB = abonadosGeneralRepository.cantidadBoletosAbonadosByZona("B");
+        Integer boletosA = ventaRepository.totalAbonadosGeneralVendido("A");
+        Integer boletosB = ventaRepository.totalAbonadosGeneralVendido("B");
 
         boletosA = (boletosA != null) ? boletosA : 0;
         boletosB = (boletosB != null) ? boletosB : 0;

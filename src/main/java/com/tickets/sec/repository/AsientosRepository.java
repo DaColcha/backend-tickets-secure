@@ -13,17 +13,17 @@ public interface AsientosRepository extends JpaRepository<AsientosNumerado, Asie
 
         public List<AsientosNumerado> findByLocalidadAndZonaAndTipo(String localidad, String zona, String tipo);
 
-        @Query("SELECT a FROM AsientosNumerado a WHERE localidad = :localidad  AND estado = 'N'")
+        @Query("SELECT a FROM AsientosNumerado a WHERE a.localidad = :localidad  AND a.estado = 'N'")
         public List<AsientosNumerado> findAbonadoByLocalidad(@Name("localidad") String localidad);
 
-        @Query("SELECT a FROM AsientosNumerado a WHERE localidad = :localidad AND zona = :zona AND tipo = :tipo AND numero IN :num_asiento")
+        @Query("SELECT a FROM AsientosNumerado a WHERE a.localidad = :localidad AND a.zona = :zona AND a.tipo = :tipo AND a.numero IN :num_asiento")
         public List<AsientosNumerado> findSeleccionados(@Name("localidad") String localidad, @Name("zona") String zona,
                         @Name("tipo") String tipo, @Name("num_asiento") List<Integer> num_asiento);
 
-        @Query("SELECT a FROM AsientosNumerado a WHERE estado = 'N'")
+        @Query("SELECT a FROM AsientosNumerado a WHERE a.estado = 'N'")
         public List<AsientosNumerado> findAbonados();
 
-        @Query("SELECT COUNT(*) FROM AsientosNumerado a WHERE estado = 'N'")
+        @Query("SELECT COUNT(*) FROM AsientosNumerado a WHERE a.estado = 'N'")
         public Integer totalAbonados();
 
         @Query("SELECT COUNT(*) FROM AsientosNumerado WHERE localidad = :localidad AND zona = :zona AND tipo = :tipo AND estado ='D'")

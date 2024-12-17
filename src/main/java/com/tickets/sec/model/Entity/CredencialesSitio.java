@@ -21,7 +21,7 @@ public class CredencialesSitio {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credencial")
-    private Credenciale credencial;
+    private Credenciales credencial;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sitio_venta")

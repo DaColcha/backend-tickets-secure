@@ -1,9 +1,9 @@
 package com.tickets.sec.controller;
 
+import com.tickets.sec.repository.AsientosRepository;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tickets.sec.model.Compra;
-import com.tickets.sec.repository.AsientoRepository;
 import com.tickets.sec.repository.SitioVentaRepository;
 
 import java.util.List;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class CompraController {
 
     @Autowired
-    private CompradorController compradorController;
+    private AbonadoController abonadoController;
     @Autowired
-    private AsientoRepository asientoRepository;
+    private AsientosRepository asientoRepository;
     @Autowired
     private SitioVentaRepository sitioVentaRepository;
 

@@ -44,4 +44,16 @@ public class Venta {
     @Column(name = "total_venta", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalVenta;
 
+    public Venta() {
+    }
+
+    public Venta(VentasAsientosNumerado ventaNumerada, VentasZonaGeneral ventaZonaGeneral, Pago pago, CredencialesSitio vendedor, Abonado abonado, LocalDate fechaVenta, BigDecimal totalVenta) {
+        this.ventaNumerada = ventaNumerada;
+        this.ventaZonaGeneral = ventaZonaGeneral;
+        this.pago = pago;
+        this.vendedor = vendedor;
+        this.abonado = abonado;
+        this.fechaVenta = fechaVenta;
+        this.totalVenta = totalVenta;
+    }
 }
