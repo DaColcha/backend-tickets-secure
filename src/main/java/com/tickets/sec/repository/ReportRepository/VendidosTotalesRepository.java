@@ -1,9 +1,8 @@
 package com.tickets.sec.repository.ReportRepository;
 
+import com.tickets.sec.model.Reports.VendidosTotalesView;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.tickets.sec.model.Reports.VendidosTotales;
-
-public interface VendidosTotalesRepository extends JpaRepository<VendidosTotales, String> {
+public interface VendidosTotalesRepository extends JpaRepository<VendidosTotalesView, String> {
 
 }

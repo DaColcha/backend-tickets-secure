@@ -1,46 +1,40 @@
 package com.tickets.sec.model.Entity;
 
-import java.util.List;
-
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "pago")
 public class Pago {
-
     @Id
-    @Column(name = "id_pago")
-    private Integer idPago;
+    @Column(name = "id", nullable = false)
+    private UUID id;
 
-    @Column(name = "tipo_pago")
-    private String tipoPago;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "formapago")
+    private FormaPago formapago;
 
-    @Column(name = "metodo_pago")
-    private String metodoPago;
+    @Column(name = "fecha_pago", nullable = false)
+    private LocalDate fechaPago;
+
+    @Column(name = "comprobante", length = 50)
+    private String comprobante;
+
+    @Column(name = "estado", nullable = false, length = 20)
+    private String estado;
+
+    @Column(name = "plazo_meses")
+    private Integer plazoMeses;
 
     @OneToMany(mappedBy = "pago")
-    private List<Asiento> asientos;
+    private Set<Venta> ventas = new LinkedHashSet<>();
 
-    public Pago() {
-    }
-
-    public Pago(Integer idPago) {
-        this.idPago = idPago;
-    }
-
-    public String getTipoPago() {
-        return tipoPago;
-    }
-
-    public void setTipoPago(String tipo) {
-        this.tipoPago = tipo;
-    }
-
-    public String getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(String metodo) {
-        this.metodoPago = metodo;
-    }
 }

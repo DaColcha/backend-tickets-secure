@@ -3,8 +3,6 @@ package com.tickets.sec.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tickets.sec.model.Compra;
-import com.tickets.sec.model.Entity.Asiento;
-import com.tickets.sec.model.Entity.SitioVenta;
 import com.tickets.sec.repository.AsientoRepository;
 import com.tickets.sec.repository.SitioVentaRepository;
 

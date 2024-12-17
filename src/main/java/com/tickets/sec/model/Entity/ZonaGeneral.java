@@ -1,42 +1,35 @@
 package com.tickets.sec.model.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "zona_general")
 public class ZonaGeneral {
-
     @Id
-    private String zona;
+    @ColumnDefault("nextval('zona_general_id_seq')")
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
-    @Column(name = "boletos")
-    private Integer boletos;
+    @Column(name = "localidad", nullable = false, length = Integer.MAX_VALUE)
+    private String localidad;
 
-    public ZonaGeneral() {
-    }
+    @Column(name = "disponibles", nullable = false)
+    private Integer disponibles;
 
-    public ZonaGeneral(String string, int i) {
-        this.zona = string;
-        this.boletos = i;
-    }
+    @OneToMany(mappedBy = "zonaGeneral")
+    private Set<VentasZonaGeneral> ventasZonaGenerals = new LinkedHashSet<>();
 
-    public String getZona() {
-        return zona;
-    }
-
-    public void setZona(String zona) {
-        this.zona = zona;
-    }
-
-    public Integer getBoletos() {
-        return boletos;
-    }
-
-    public void setBoletos(int boletos) {
-        this.boletos = boletos;
+    public ZonaGeneral(String localidad, Integer disponibles) {
+        this.localidad = localidad;
+        this.disponibles = disponibles;
     }
 
 }

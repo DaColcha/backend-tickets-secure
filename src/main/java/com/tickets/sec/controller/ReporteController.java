@@ -32,41 +32,28 @@ public class ReporteController {
     private VendidosGeneralRepository vendidosGeneralRepository;
 
     @GetMapping("/vendidos/total")
-    public List<VendidosTotales> getVendidosTotal() {
+    public List<VendidosTotalesView> getVendidosTotal() {
         return vendidosTotalesRepository.findAll();
     }
 
     @GetMapping("/vendidos/cancha")
-    public List<VendidosCancha> getMethodName() {
+    public List<VendidosCanchaView> getMethodName() {
         return vendidosCanchaRepository.findAll();
     }
 
     @GetMapping("/vendidos/tribuna")
-    public List<VendidosTribuna> getVendidosTribuna() {
+    public List<VendidosTribunaView> getVendidosTribuna() {
         return vendidosTribunaRepository.findAll();
     }
 
     @GetMapping("/vendidos/general")
-    public List<VendidosGeneral> getVendidosGeneral() {
+    public List<VendidosGeneralView> getVendidosGeneral() {
         return vendidosGeneralRepository.findAll();
     }
 
     @GetMapping("/ganancias")
-    public List<GananciasTotales> getGananciasTotales() {
+    public List<GananciasTotalesView> getGananciasTotales() {
         return gananciasTotalesRepository.findAll();
-    }
-
-    @GetMapping("/abonados")
-    public List<AbonadosTotales> getAbonadosTotales() {
-        List<Object> procedureResult = gananciasTotalesRepository.getAbonadosTotales();
-
-        List<AbonadosTotales> abonadosTotales = new ArrayList<>();
-        for (Object object : procedureResult) {
-            Object[] fields = (Object[]) object;
-            abonadosTotales.add(new AbonadosTotales((String) fields[0], (BigDecimal) fields[1]));
-        }
-
-        return abonadosTotales;
     }
 
 }

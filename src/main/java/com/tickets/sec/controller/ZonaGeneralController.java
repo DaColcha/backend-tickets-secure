@@ -1,11 +1,8 @@
 package com.tickets.sec.controller;
 
+import com.tickets.sec.model.Entity.ZonaGeneral;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tickets.sec.model.Entity.AbonadosGeneral;
-import com.tickets.sec.model.Entity.SitioVenta;
-import com.tickets.sec.model.Entity.ZonaGeneral;
-import com.tickets.sec.repository.AbonadosGeneralRepository;
 import com.tickets.sec.repository.SitioVentaRepository;
 import com.tickets.sec.repository.ZonaGeneralRepository;
 
@@ -29,13 +26,11 @@ public class ZonaGeneralController {
     @Autowired
     private ZonaGeneralRepository zonaGeneralRepository;
     @Autowired
-    private AbonadosGeneralRepository abonadosGeneralRepository;
-    @Autowired
     private SitioVentaRepository sitioVentaRepository;
 
     @GetMapping("/{zona}")
     public Integer getDisponibilidad(@PathVariable String zona) {
-        return zonaGeneralRepository.findByZona(zona).getBoletos();
+        return zonaGeneralRepository.findByZona(zona).getDisponibles();
     }
 
     @PostMapping("/compra")

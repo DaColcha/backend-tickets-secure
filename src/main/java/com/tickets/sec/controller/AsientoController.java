@@ -2,6 +2,10 @@ package com.tickets.sec.controller;
 
 import java.util.List;
 
+import com.tickets.sec.model.Entity.AsientosNumerado;
+import com.tickets.sec.model.Entity.ZonaGeneral;
+import com.tickets.sec.repository.AsientosRepository;
+import com.tickets.sec.repository.VentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,10 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tickets.sec.model.Compra;
-import com.tickets.sec.model.Entity.Asiento;
-import com.tickets.sec.model.Entity.ZonaGeneral;
-import com.tickets.sec.repository.AbonadosGeneralRepository;
-import com.tickets.sec.repository.AsientoRepository;
 import com.tickets.sec.repository.ZonaGeneralRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,16 +26,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AsientoController {
 
     @Autowired
-    private AsientoRepository asientoRepository;
+    private AsientosRepository asientoRepository;
 
     @Autowired
     private ZonaGeneralRepository zonaGeneralRepository;
-
     @Autowired
-    private AbonadosGeneralRepository abonadosGeneralRepository;
+    private VentaRepository ventaRepository;
 
     @GetMapping("/{localidad}/{zona}/{tipo}")
-    public List<Asiento> getSitsByZone(@PathVariable String localidad, @PathVariable String zona,
+    public List<AsientosNumerado> getSitsByZone(@PathVariable String localidad, @PathVariable String zona,
             @PathVariable String tipo) {
         return asientoRepository.findByLocalidadAndZonaAndTipo(localidad, zona, tipo);
     }
@@ -48,8 +47,8 @@ public class AsientoController {
 
     @SuppressWarnings("null")
     @PostMapping("/create-sits")
-    public ResponseEntity<Asiento> createSits(@RequestBody List<Asiento> asientos) {
-        asientos.forEach(a -> asientoRepository.save(a));
+    public ResponseEntity<AsientosNumerado> createSits(@RequestBody List<AsientosNumerado> asientos) {
+        asientoRepository.saveAll(asientos);
         return ResponseEntity.ok().build();
     }
 
@@ -67,11 +66,13 @@ public class AsientoController {
 
     @Transactional
     @PatchMapping("/limpiar")
-    public ResponseEntity<Asiento> clearAllSitsNoAbonated() {
-        asientoRepository.cleanAllSitsNoAbonate();
+    public ResponseEntity<String> clearAllSitsNoAbonated() {
 
-        Integer boletosA = abonadosGeneralRepository.cantidadBoletosAbonadosByZona("A");
-        Integer boletosB = abonadosGeneralRepository.cantidadBoletosAbonadosByZona("B");
+        //TODO:LIMPIAR ASIENTOS NUMERADOS DE NO ABONADOS
+        //asientoRepository.cleanAllSitsNoAbonate();
+
+        Integer boletosA = ventaRepository.totalAbonadosGeneralVendido("A");
+        Integer boletosB = ventaRepository.totalAbonadosGeneralVendido("B");
 
         boletosA = (boletosA != null) ? boletosA : 0;
         boletosB = (boletosB != null) ? boletosB : 0;
@@ -84,10 +85,9 @@ public class AsientoController {
 
     @Transactional
     @PatchMapping("/limpiar-todo")
-    public ResponseEntity<Asiento> clearAllSits() {
+    public ResponseEntity<String> clearAllSits() {
         asientoRepository.cleanAllSits();
         zonaGeneralRepository.restartGeneral();
-        abonadosGeneralRepository.cleanAbonadosGeneral();
         return ResponseEntity.ok().build();
     }
 }

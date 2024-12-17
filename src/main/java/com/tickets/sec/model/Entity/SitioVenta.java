@@ -1,65 +1,30 @@
 package com.tickets.sec.model.Entity;
 
-import java.util.List;
-
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "sitio_venta")
 public class SitioVenta {
     @Id
-    @Column(name = "id_sitio")
+    @ColumnDefault("nextval('sitio_venta_id_seq')")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "usuario_sitio")
-    private String nombreSitio;
+    @Column(name = "nombre", nullable = false, length = 50)
+    private String nombre;
 
-    @Column(name = "acceso_sitio")
-    private String contraseña;
+    @Column(name = "ubicacion", length = 200)
+    private String ubicacion;
 
-    @Column(name = "rol_sitio")
-    private String rol;
-
-    @OneToMany(mappedBy = "sitio_venta")
-    private List<Asiento> asientos;
-
-    public SitioVenta() {
-    }
-
-    public SitioVenta(String nombreSitio) {
-        this.nombreSitio = nombreSitio;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombreSitio() {
-        return nombreSitio;
-    }
-
-    public void setNombreSitio(String nombreSitio) {
-        this.nombreSitio = nombreSitio;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
+    @OneToMany(mappedBy = "sitioVenta")
+    private Set<CredencialesSitio> credencialesSitios = new LinkedHashSet<>();
 
 }

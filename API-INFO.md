@@ -128,20 +128,6 @@
         "plazo": null
     }
 
-## ENDPOINTS para eliminar individualmente
-
-<img src="https://img.shields.io/badge/PATCH-9726a6?style=plastic" alt="PATCH" height = 20px/> **/eliminar/general/{idCompra}** Elimina el registro de compra de un abonado en GENERAL según el **idCompra** enviado en el path.
-
-<img src="https://img.shields.io/badge/PATCH-9726a6?style=plastic" alt="PATCH" height = 20px/> **/eliminar/{localidad}** Elimina el registro de compra de los asientos indicados en la localidad establecida, necesita que se envíe un objeto como el de acontinuación. 
-
-<a href="https://"><img src="https://img.shields.io/badge/OBJETO-Eliminar_compra_abonado_tribuna_o_cancha-b729f0" alt="OBJETO - Eliminar compra abonado tribuna o cancha" height = 25px></a>
-
-    {
-        "zona": "A1",
-        "tipo": "GRADAS",
-        "asientosSeleccionados": [1,2]
-    }
-
 ## ENDPOINTS para reportes
 <img src="https://img.shields.io/badge/GET-green?style=plastic" alt="GET" height = 20px/>  **/reporte/vendidos**  Obtienes el archivo PDF del reporte de boletos vendidos. 
 

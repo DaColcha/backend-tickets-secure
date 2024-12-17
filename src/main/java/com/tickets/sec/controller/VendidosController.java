@@ -1,11 +1,11 @@
 package com.tickets.sec.controller;
 
+import com.tickets.sec.repository.AsientosRepository;
+import com.tickets.sec.repository.VentaRepository;
 import org.springframework.web.bind.annotation.RestController;
 import com.tickets.sec.model.ReporteComprado;
 import com.tickets.sec.model.ReporteGeneral;
 import com.tickets.sec.model.ReporteGeneralAbonado;
-import com.tickets.sec.repository.AbonadosGeneralRepository;
-import com.tickets.sec.repository.AsientoRepository;
 import com.tickets.sec.repository.ZonaGeneralRepository;
 import java.util.List;
 
@@ -19,19 +19,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class VendidosController {
 
     @Autowired
-    private AsientoRepository asientoRepository;
+    private AsientosRepository asientoRepository;
     @Autowired
     private ZonaGeneralRepository zonaGeneralRepository;
-    @Autowired
-    private AbonadosGeneralRepository abonadosGeneralRepository;
 
     private ReporteComprado reportesComprado = new ReporteComprado();
+    @Autowired
+    private VentaRepository ventaRepository;
 
     @GetMapping("/total")
     public int getTotalVendidos() {
         int totalNumerados = asientoRepository.totalVendidos();
-        int totalGeneralA = 1500 - zonaGeneralRepository.findByZona("A").getBoletos();
-        int totalGeneralB = 1500 - zonaGeneralRepository.findByZona("B").getBoletos();
+        int totalGeneralA = 1500 - zonaGeneralRepository.findByZona("A").getDisponibles();
+        int totalGeneralB = 1500 - zonaGeneralRepository.findByZona("B").getDisponibles();
 
         return totalGeneralA + totalGeneralB + totalNumerados;
     }
@@ -59,7 +59,7 @@ public class VendidosController {
 
     @GetMapping("/general/{zona}")
     public ReporteGeneral getVendidos(@PathVariable String zona) {
-        Integer disponibles = zonaGeneralRepository.findByZona(zona).getBoletos();
+        Integer disponibles = zonaGeneralRepository.findByZona(zona).getDisponibles();
         Integer vendidos = 1500 - disponibles;
         return new ReporteGeneral(disponibles, vendidos);
     }
@@ -67,6 +67,6 @@ public class VendidosController {
     @GetMapping("/general")
     public List<ReporteGeneralAbonado> getVendidos() {
         ReporteGeneralAbonado reporte = new ReporteGeneralAbonado();
-        return reporte.createReport(abonadosGeneralRepository.findAll());
+        return reporte.createReport(ventaRepository.findVentasAbonadosGeneral());
     }
 }

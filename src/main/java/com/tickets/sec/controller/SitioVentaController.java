@@ -2,7 +2,6 @@ package com.tickets.sec.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tickets.sec.model.Entity.SitioVenta;
 import com.tickets.sec.repository.SitioVentaRepository;
 
 import java.util.List;

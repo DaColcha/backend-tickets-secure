@@ -1,12 +1,10 @@
 package com.tickets.sec.model.Reports;
+import jakarta.persistence.Column;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-import jakarta.persistence.Column;
-
-public class GananciasTotalesId implements Serializable {
-
+public class GananciasTotalesViewId implements Serializable {
     @Column(name = "localidad")
     private String localidad;
 
@@ -35,7 +33,7 @@ public class GananciasTotalesId implements Serializable {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        GananciasTotalesId that = (GananciasTotalesId) o;
+        GananciasTotalesViewId that = (GananciasTotalesViewId) o;
         return localidad.equals(that.localidad) && tipo.equals(that.tipo);
     }
 

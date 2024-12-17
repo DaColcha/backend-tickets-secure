@@ -1,12 +1,12 @@
 package com.tickets.sec.model;
 
+import com.tickets.sec.model.Entity.Abonado;
+import com.tickets.sec.model.Entity.AsientosNumerado;
+import com.tickets.sec.model.Entity.Pago;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.tickets.sec.model.Entity.Asiento;
-import com.tickets.sec.model.Entity.Comprador;
-import com.tickets.sec.model.Entity.Pago;
 
 public class ReporteComprado {
 
@@ -15,7 +15,7 @@ public class ReporteComprado {
     private String zona;
     private String tipo;
     private List<Integer> asientos;
-    private Comprador comprador;
+    private Abonado comprador;
     private String tipoCompra;
     private String sitioVenta;
     private Pago pago;
@@ -24,7 +24,7 @@ public class ReporteComprado {
     public ReporteComprado() {
     }
 
-    public ReporteComprado(Integer id, String zona, String tipo, List<Integer> asientos, Comprador comprador,
+    public ReporteComprado(Integer id, String zona, String tipo, List<Integer> asientos, Abonado comprador,
             String tipoCompra,
             String sitioVenta, Pago pago, String plazo) {
         this.id = id;
@@ -78,11 +78,11 @@ public class ReporteComprado {
         this.asientos = asientos;
     }
 
-    public Comprador getComprador() {
+    public Abonado getComprador() {
         return comprador;
     }
 
-    public void setComprador(Comprador comprador) {
+    public void setComprador(Abonado comprador) {
         this.comprador = comprador;
     }
 
@@ -110,38 +110,40 @@ public class ReporteComprado {
         this.pago = pago;
     }
 
-    public List<ReporteComprado> createReport(List<Asiento> asientos) {
+    public List<ReporteComprado> createReport(List<AsientosNumerado> asientos) {
         List<ReporteComprado> vendidos = new ArrayList<>();
 
-        List<Comprador> compradores = asientos.stream().map(a -> a.getComprador()).distinct().toList();
+        //TODO: Implementar el metodo createReport
 
-        Integer count = 1;
-        for (Comprador c : compradores) {
-            List<Asiento> asientosComprados = asientos.stream().filter(a -> a.getComprador().equals(c)).toList();
-
-            List<List<Asiento>> asientosList = asientosComprados.stream()
-                    .collect(Collectors.groupingBy(
-                            asiento -> asiento.getComprador() + "-" +
-                                    asiento.getLocalidad() + "-" +
-                                    asiento.getZona() + "-" +
-                                    asiento.getTipo()))
-                    .values().stream().toList();
-
-            for (List<Asiento> asientoList : asientosList) {
-                List<Integer> numAsientosComprados = asientoList.stream().map(a -> a.getNumAsiento()).toList();
-                ReporteComprado reporte = new ReporteComprado(
-                        count,
-                        asientoList.get(0).getZona(),
-                        asientoList.get(0).getTipo(),
-                        numAsientosComprados, c,
-                        asientoList.get(0).getTipoCompra(),
-                        asientoList.get(0).getSitioVenta().getNombreSitio(),
-                        asientoList.get(0).getPago(),
-                        asientoList.get(0).getPlazo());
-                vendidos.add(reporte);
-                count++;
-            }
-        }
+//        List<Abonado> compradores = asientos.stream().map(a -> a.getComprador()).distinct().toList();
+//
+//        Integer count = 1;
+//        for (Comprador c : compradores) {
+//            List<Asiento> asientosComprados = asientos.stream().filter(a -> a.getComprador().equals(c)).toList();
+//
+//            List<List<Asiento>> asientosList = asientosComprados.stream()
+//                    .collect(Collectors.groupingBy(
+//                            asiento -> asiento.getComprador() + "-" +
+//                                    asiento.getLocalidad() + "-" +
+//                                    asiento.getZona() + "-" +
+//                                    asiento.getTipo()))
+//                    .values().stream().toList();
+//
+//            for (List<Asiento> asientoList : asientosList) {
+//                List<Integer> numAsientosComprados = asientoList.stream().map(a -> a.getNumAsiento()).toList();
+//                ReporteComprado reporte = new ReporteComprado(
+//                        count,
+//                        asientoList.get(0).getZona(),
+//                        asientoList.get(0).getTipo(),
+//                        numAsientosComprados, c,
+//                        asientoList.get(0).getTipoCompra(),
+//                        asientoList.get(0).getSitioVenta().getNombreSitio(),
+//                        asientoList.get(0).getPago(),
+//                        asientoList.get(0).getPlazo());
+//                vendidos.add(reporte);
+//                count++;
+//            }
+//        }
 
         return vendidos;
     }

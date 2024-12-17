@@ -2,9 +2,6 @@ package com.tickets.sec.model;
 
 import java.util.List;
 
-import com.tickets.sec.model.Entity.Comprador;
-import com.tickets.sec.model.Entity.Pago;
-
 public class Compra {
 
     private String localidad;
