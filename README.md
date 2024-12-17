@@ -1,5 +1,13 @@
 # SpringBoot - Tickets API
 
+_Antes de ejecutar el proyecto asegurarse de tener Java 11 o superior y la última versión de Maven._ 
+
+➡️[Descargar Java](https://www.oracle.com/java/technologies/downloads/?er=221886)
+
+➡️[Guía paso a paso para instalar Maven](https://phoenixnap.com/kb/install-maven-windows)
+
+### Iniciemos! ⏩
+
 1. Clona el repositorio 
 
 2. Usa el archivo __.env.template__, modifíca las variables si lo necesitas y renombralo a __.env__
@@ -21,8 +29,6 @@
     ```
     mvn spring-boot:run
     ```
-_Antes de ejecutar el proyecto asegurarse de tener Java 11 o superior y la última versión de Maven._
 
-
-Listo! Ahora accede a la api a través del __localhost:8080__
+### Listo! Ahora accede a la api a través del __localhost:8080__
 Si necesitas trabajar con un puerto diferente, modificalo en el archivo __resources/application.properties__
