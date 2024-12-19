@@ -37,4 +37,15 @@ public class Pago {
     @OneToMany(mappedBy = "pago")
     private Set<Venta> ventas = new LinkedHashSet<>();
 
+    public Pago() {
+    }
+
+    public Pago(UUID id, FormaPago formapago, LocalDate fechaPago, String comprobante, String estado, Integer plazoMeses) {
+        this.id = id;
+        this.formapago = formapago;
+        this.fechaPago = fechaPago;
+        this.comprobante = comprobante;
+        this.estado = estado;
+        this.plazoMeses = plazoMeses;
+    }
 }

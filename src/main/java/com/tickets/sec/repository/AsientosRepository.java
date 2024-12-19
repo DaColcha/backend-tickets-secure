@@ -3,7 +3,6 @@ package com.tickets.sec.repository;
 import java.util.List;
 
 import com.tickets.sec.model.Entity.AsientosNumerado;
-import com.tickets.sec.model.Entity.AsientosNumeradoId;
 import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

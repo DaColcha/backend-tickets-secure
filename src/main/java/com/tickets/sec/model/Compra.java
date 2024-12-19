@@ -17,8 +17,8 @@ public class Compra {
     private Abonado comprador;
     private List<Integer> asientosSeleccionados;
     private String tipoCompra;
-    private String sitioVenta;
-    private FormaPago pago;
+    private Integer vendedor;
+    private FormaPago formaPago;
     private String plazo;
 
     public Compra() {

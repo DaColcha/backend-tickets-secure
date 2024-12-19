@@ -19,13 +19,21 @@ public class VentasAsientosNumerado {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @ElementCollection
     @Column(name = "asientos", nullable = false)
     private List<Integer> asientos;
-
-    @Column(name = "tipo_venta", nullable = false, length = 20)
-    private String tipoVenta;
 
     @OneToMany(mappedBy = "ventaNumerada")
     private Set<Venta> ventas = new LinkedHashSet<>();
 
+    @Column(name = "cantidad", nullable = false)
+    private Integer cantidad;
+
+    public VentasAsientosNumerado() {
+    }
+
+    public VentasAsientosNumerado(List<Integer> asientos, Integer cantidad) {
+        this.asientos = asientos;
+        this.cantidad = cantidad;
+    }
 }
