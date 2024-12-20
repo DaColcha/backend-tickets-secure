@@ -12,21 +12,23 @@ _Antes de ejecutar el proyecto asegurarse de tener Java 11 o superior y la últi
 
 2. Usa el archivo __.env.template__, modifíca las variables si lo necesitas y renombralo a __.env__
 
-3. Agrega la carpeta de la base de datos que se encuentra en el [link](https://epnecuador-my.sharepoint.com/:f:/g/personal/daniela_colcha_epn_edu_ec/EsmDUG8pLfBNpGR-YPOlV2QBMIeqZwkF7PaxjCsNchTC7A?e=WsgykO).
-   
-   El árbol de archivos ser debería verse de la siguiente manera:
-   ```
-   backend/
-    ├── postgresql/
-    ├── src/
-    ├── ...
-   ```
+3. Descarga los scripts SQL que se encuentran en el [link](https://epnecuador-my.sharepoint.com/:f:/g/personal/daniela_colcha_epn_edu_ec/EsmDUG8pLfBNpGR-YPOlV2QBMIeqZwkF7PaxjCsNchTC7A?e=WsgykO).
+
 4. Ejecuta el siguiente comando
     ```
     docker-compose up -d
     ```
-5. Ejecuta el siguiente comando para iniciar el proyecto en modo desarrollo
+5. Con la base levantada, utiliza tu gestor de BD favorito para acceder a ella y ejecutar los scripts descargados en el paso 3.
+El orden en que deben ser ejecutados es el siguiente: 
+   ```
+    1. create-statement.sql
+    2. initial-values.sql
+    3. views-create.sql
+   ```
+
+6. Con la base de datos lista, ejecuta los siguientes comandos para iniciar el proyecto en modo desarrollo
     ```
+    mvn clean install 
     mvn spring-boot:run
     ```
 
