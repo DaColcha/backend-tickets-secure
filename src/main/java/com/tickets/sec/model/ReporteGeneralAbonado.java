@@ -18,21 +18,19 @@ public class ReporteGeneralAbonado {
     private Integer cantidadBoletos;
     private String sitioVenta;
     private FormaPago pago;
-    private String plazo;
 
     public ReporteGeneralAbonado() {
     }
 
     public ReporteGeneralAbonado(String idCompra, String zona, Abonado comprador, Integer cantidadBoletos,
             String sitioVenta,
-            FormaPago pago, String plazo) {
+            FormaPago pago) {
         this.idCompra = idCompra;
         this.zona = zona;
         this.comprador = comprador;
         this.cantidadBoletos = cantidadBoletos;
         this.sitioVenta = sitioVenta;
         this.pago = pago;
-        this.plazo = plazo;
     }
 
     public List<ReporteGeneralAbonado> createReport(List<Venta> ventasZonaGeneralList) {
@@ -44,8 +42,7 @@ public class ReporteGeneralAbonado {
                     venta.getAbonado(),
                     venta.getVentaZonaGeneral().getCantidad(),
                     venta.getVendedor().getSitioVenta().getNombre(),
-                    venta.getPago().getFormapago(),
-                    venta.getPago().getPlazoMeses().toString()));
+                    venta.getPago().getFormapago()));
         }
         return reporte;
     }

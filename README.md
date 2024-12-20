@@ -34,3 +34,6 @@ El orden en que deben ser ejecutados es el siguiente:
 
 ### Listo! Ahora accede a la api a través del __localhost:8080__
 Si necesitas trabajar con un puerto diferente, modificalo en el archivo __resources/application.properties__
+
+### Documentación 📖
+Para acceder a la documentación de la API, ingresa a __http://localhost:8080/swagger-ui/index.html#/__
