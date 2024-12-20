@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-public interface AsientosRepository extends JpaRepository<AsientosNumerado, AsientosNumeradoId> {
+public interface AsientosRepository extends JpaRepository<AsientosNumerado, Integer> {
 
         public List<AsientosNumerado> findByLocalidadAndZonaAndTipo(String localidad, String zona, String tipo);
 

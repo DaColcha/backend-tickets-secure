@@ -66,8 +66,7 @@ public class CompraController {
                             compra.getFormaPago(),
                             java.time.LocalDate.now(),
                             null,
-                            "P",
-                            Integer.parseInt(compra.getPlazo())));
+                            "P"));
                     venta.setVendedor(credencialesSitioRepository.findById(compra.getVendedor()).get());
                     venta.setAbonado(compra.getComprador());
                     venta.setFechaVenta(java.time.LocalDate.now());
@@ -88,8 +87,7 @@ public class CompraController {
                             compra.getFormaPago(),
                             java.time.LocalDate.now(),
                             null,
-                            "P",
-                            Integer.parseInt(compra.getPlazo())));
+                            "P"));
                     venta.setVendedor(credencialesSitioRepository.findById(compra.getVendedor()).get());
                     venta.setFechaVenta(java.time.LocalDate.now());
                     venta.setTotalVenta(java.math.BigDecimal.valueOf

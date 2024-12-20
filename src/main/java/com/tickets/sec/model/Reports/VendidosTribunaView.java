@@ -1,9 +1,6 @@
 package com.tickets.sec.model.Reports;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
@@ -16,6 +13,7 @@ import org.hibernate.annotations.Immutable;
 @Entity
 @Immutable
 @Table(name = "vendidos_tribuna_view")
+@IdClass(VendidosTribunaViewId.class)
 public class VendidosTribunaView {
 
     @Id

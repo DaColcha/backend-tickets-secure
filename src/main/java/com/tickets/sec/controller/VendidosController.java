@@ -30,8 +30,8 @@ public class VendidosController {
     @GetMapping("/total")
     public int getTotalVendidos() {
         int totalNumerados = asientoRepository.totalVendidos();
-        int totalGeneralA = 1500 - zonaGeneralRepository.findByZona("A").getDisponibles();
-        int totalGeneralB = 1500 - zonaGeneralRepository.findByZona("B").getDisponibles();
+        int totalGeneralA = 1500 - zonaGeneralRepository.findByLocalidad("A").getDisponibles();
+        int totalGeneralB = 1500 - zonaGeneralRepository.findByLocalidad("B").getDisponibles();
 
         return totalGeneralA + totalGeneralB + totalNumerados;
     }
@@ -59,7 +59,7 @@ public class VendidosController {
 
     @GetMapping("/general/{zona}")
     public ReporteGeneral getVendidos(@PathVariable String zona) {
-        Integer disponibles = zonaGeneralRepository.findByZona(zona).getDisponibles();
+        Integer disponibles = zonaGeneralRepository.findByLocalidad(zona).getDisponibles();
         Integer vendidos = 1500 - disponibles;
         return new ReporteGeneral(disponibles, vendidos);
     }

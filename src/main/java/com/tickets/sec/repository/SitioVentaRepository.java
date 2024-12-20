@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SitioVentaRepository extends JpaRepository<SitioVenta, Integer> {
 
-    public SitioVenta findByNombreSitio(String nombreSitio);
+    public SitioVenta findByNombre(String nombreSitio);
 }

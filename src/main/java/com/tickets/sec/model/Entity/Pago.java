@@ -29,10 +29,7 @@ public class Pago {
     private String comprobante;
 
     @Column(name = "estado", nullable = false, length = 20)
-    private String estado;
-
-    @Column(name = "plazo_meses")
-    private Integer plazoMeses;
+    private String estado; // aprobado - rechazado
 
     @OneToMany(mappedBy = "pago")
     private Set<Venta> ventas = new LinkedHashSet<>();
@@ -40,12 +37,11 @@ public class Pago {
     public Pago() {
     }
 
-    public Pago(UUID id, FormaPago formapago, LocalDate fechaPago, String comprobante, String estado, Integer plazoMeses) {
+    public Pago(UUID id, FormaPago formapago, LocalDate fechaPago, String comprobante, String estado) {
         this.id = id;
         this.formapago = formapago;
         this.fechaPago = fechaPago;
         this.comprobante = comprobante;
         this.estado = estado;
-        this.plazoMeses = plazoMeses;
     }
 }

@@ -37,7 +37,7 @@ public class ZonaGeneralController {
 
     @GetMapping("/{zona}")
     public Integer getDisponibilidad(@PathVariable String zona) {
-        return zonaGeneralRepository.findByZona(zona).getDisponibles();
+        return zonaGeneralRepository.findByLocalidad(zona).getDisponibles();
     }
 
     @PostMapping("/compra")
@@ -58,7 +58,7 @@ public class ZonaGeneralController {
     @PostMapping("/compra/abonado")
     public ResponseEntity<String> compraGeneralAbonado(@RequestBody Venta compra) {
 
-        SitioVenta sitioVenta = sitioVentaRepository.findByNombreSitio(compra.getVendedor().getSitioVenta().getNombre());
+        SitioVenta sitioVenta = sitioVentaRepository.findByNombre(compra.getVendedor().getSitioVenta().getNombre());
 
         Integer boletosComprados = compra.getVentaZonaGeneral().getCantidad();
         Integer boletosDisponibles = getDisponibilidad(compra.getVentaZonaGeneral().getZonaGeneral().getLocalidad());

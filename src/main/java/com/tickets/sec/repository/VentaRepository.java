@@ -13,8 +13,8 @@ public interface VentaRepository extends JpaRepository<Venta, Integer> {
     public List<Venta> findVentasAbonadosGeneral();
 
     @Query("SELECT sum(v.ventaZonaGeneral.cantidad) FROM Venta v " +
-            "WHERE v.abonado IS NOT NULL and v.ventaNumerada IS NOT NULL and v.ventaZonaGeneral IS NULL " +
-            "AND v.ventaZonaGeneral.zonaGeneral.localidad = :localidad" +
+            "WHERE v.abonado IS NOT NULL and v.ventaNumerada IS NULL and v.ventaZonaGeneral IS NOT NULL " +
+            "AND v.ventaZonaGeneral.zonaGeneral.localidad = :localidad " +
             "GROUP BY v.ventaZonaGeneral.zonaGeneral.localidad")
     public Integer totalAbonadosGeneralVendido(@Name("localidad") String localidad);
 }

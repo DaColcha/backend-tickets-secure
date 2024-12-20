@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ZonaGeneralRepository extends JpaRepository<ZonaGeneral, String> {
 
-    public ZonaGeneral findByZona(String zona);
+    public ZonaGeneral findByLocalidad(String localidad);
 
     @Modifying
     @Query("UPDATE ZonaGeneral SET disponibles=1500")
