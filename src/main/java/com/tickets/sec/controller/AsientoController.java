@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tickets.sec.model.Compra;
+import com.tickets.sec.dto.Compra;
 import com.tickets.sec.repository.ZonaGeneralRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;

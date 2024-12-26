@@ -5,7 +5,7 @@ import com.tickets.sec.repository.*;
 import com.tickets.sec.utils.Constants;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tickets.sec.model.Compra;
+import com.tickets.sec.dto.Compra;
 
 import java.util.List;
 import java.util.UUID;

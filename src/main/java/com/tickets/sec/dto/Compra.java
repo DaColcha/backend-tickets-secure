@@ -1,4 +1,4 @@
-package com.tickets.sec.model;
+package com.tickets.sec.dto;
 
 import com.tickets.sec.model.Entity.Abonado;
 import com.tickets.sec.model.Entity.FormaPago;
@@ -7,8 +7,8 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Setter
 @Getter
+@Setter
 public class Compra {
 
     private String localidad;
@@ -35,5 +35,6 @@ public class Compra {
         this.tipo = tipo;
         this.asientosSeleccionados = asientosSeleccionados;
     }
+
 
 }

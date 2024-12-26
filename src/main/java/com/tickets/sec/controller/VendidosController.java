@@ -3,9 +3,9 @@ package com.tickets.sec.controller;
 import com.tickets.sec.repository.AsientosRepository;
 import com.tickets.sec.repository.VentaRepository;
 import org.springframework.web.bind.annotation.RestController;
-import com.tickets.sec.model.ReporteComprado;
-import com.tickets.sec.model.ReporteGeneral;
-import com.tickets.sec.model.ReporteGeneralAbonado;
+import com.tickets.sec.dto.ReporteComprado;
+import com.tickets.sec.dto.ReporteGeneral;
+import com.tickets.sec.dto.ReporteGeneralAbonado;
 import com.tickets.sec.repository.ZonaGeneralRepository;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.tickets.sec.model;
+package com.tickets.sec.dto;
 
 public class ReporteGeneral {
 

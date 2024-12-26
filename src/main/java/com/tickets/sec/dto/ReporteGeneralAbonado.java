@@ -1,4 +1,4 @@
-package com.tickets.sec.model;
+package com.tickets.sec.dto;
 
 import com.tickets.sec.model.Entity.*;
 import lombok.Getter;

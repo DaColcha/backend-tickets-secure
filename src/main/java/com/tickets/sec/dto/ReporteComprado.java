@@ -1,4 +1,4 @@
-package com.tickets.sec.model;
+package com.tickets.sec.dto;
 
 import com.tickets.sec.model.Entity.Abonado;
 import com.tickets.sec.model.Entity.AsientosNumerado;
@@ -6,7 +6,6 @@ import com.tickets.sec.model.Entity.Pago;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ReporteComprado {
 
