@@ -1,5 +1,6 @@
 package com.tickets.sec.controller;
 
+import com.tickets.sec.dto.EncryptedData;
 import com.tickets.sec.dto.Tarjeta;
 import com.tickets.sec.service.TokenizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ public class TokenizeController {
     private TokenizationService tokenizationService;
 
     @PostMapping()
-    public ResponseEntity<Map<String, String>> tokenize(@RequestBody Tarjeta cardData) {
+    public ResponseEntity<Map<String, String>> tokenize(@RequestBody EncryptedData cardData) {
 
         try{
-            String token = tokenizationService.createToken(cardData);
+            String token = tokenizationService.createToken(cardData.getEncryptedData());
             return ResponseEntity.ok(Map.of("token", token));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

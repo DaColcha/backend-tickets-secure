@@ -1,10 +1,12 @@
 package com.tickets.sec.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tickets.sec.dto.Tarjeta;
 import com.tickets.sec.exceptions.CardValidationException;
 import com.tickets.sec.exceptions.TokenException;
 import com.tickets.sec.model.Entity.TokenData;
 import com.tickets.sec.repository.TokenRepository;
+import com.tickets.sec.utils.CryptoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,26 @@ public class TokenizationService {
     @Autowired
     private TokenRepository tokenRepository;
 
-    public String createToken(Tarjeta cardData) throws CardValidationException {
-        validateCard(cardData);
+    @Autowired
+    private CryptoUtils cryptoUtils;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    public String createToken(String encryptedData) {
+
+        if(encryptedData != null) {
+            try{
+                String decryptedData = cryptoUtils.decrypt(encryptedData);
+                System.out.println("Datos descifrados: "+decryptedData);
+                Tarjeta cardData = objectMapper.readValue(decryptedData, Tarjeta.class);
+
+                // Validar datos de tarjeta
+                validateCard(cardData);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         String token = generateSecureToken();
 
@@ -35,8 +55,7 @@ public class TokenizationService {
         tokenData.setUsed(false);
 
         tokenRepository.save(tokenData);
-        log.info("Token created successfully for card ending in {}",
-                cardData.getNumero().substring(12));
+        log.info("Token created successfully");
 
         return token;
     }
