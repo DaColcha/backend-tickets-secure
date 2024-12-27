@@ -10,4 +10,7 @@ public interface CredencialesSitioRepository extends JpaRepository<CredencialesS
 
     @Query("SELECT c FROM CredencialesSitio c WHERE c.credencial.id = ?1")
     public CredencialesSitio findByCredencialId(UUID id);
+
+    @Query("SELECT c FROM CredencialesSitio c WHERE c.credencial.usuario= ?1")
+    public CredencialesSitio findByUsuario(String user);
 }
