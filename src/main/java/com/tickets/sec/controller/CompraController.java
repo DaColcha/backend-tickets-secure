@@ -2,8 +2,10 @@ package com.tickets.sec.controller;
 
 import com.tickets.sec.dto.CompraResponse;
 import com.tickets.sec.dto.PagoResponse;
+import com.tickets.sec.model.Entity.TokenData;
 import com.tickets.sec.service.CompraService;
 import com.tickets.sec.service.PagoService;
+import com.tickets.sec.service.TokenizationService;
 import com.tickets.sec.utils.Constants;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,27 +33,29 @@ public class CompraController {
     public ResponseEntity<CompraResponse> saveCompra(@RequestBody CompraNumerados compra) {
 
         CompraResponse compraResponse = new CompraResponse("", "");
+        PagoResponse pagoResponse = new PagoResponse();
+
+        //Calculamos total de la compra
+        BigDecimal total = compraService.getTotalVenta(compra.getLocalidad(), compra.getTipo(), compra.getAsientosSeleccionados().size());
 
         if(compra.getFormaPago().equals(Constants.PAGO_TARJETA)){
 
-            //Calculamos total de la compra
-            BigDecimal total = compraService.getTotalVenta(compra.getLocalidad(), compra.getTipo(), compra.getAsientosSeleccionados().size());
-
-            //Procesamos el pago
-            PagoResponse pagoResponse = pagoService.procesarPago(compra.getToken(), total);
+            //Procesamos pago con tarjeta
+            pagoResponse = pagoService.procesarPago(compra.getToken(), total, true, null);
 
             //Si el pago fue exitoso, procedemos a guardar la venta
-            if (pagoResponse.getEstado().equals("aprobado")){
-                compraResponse = compraService.procesarCompra(compra, pagoResponse.getId());
-            }else{
-                compraResponse = new CompraResponse("rechazada", pagoResponse.getMensaje());
-            }
+            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = compraService.procesarCompra(compra, pagoResponse.getId());
         }else{
-            compraResponse = compraService.procesarCompra(compra, null);
 
+            //procesamos pago sin tarjeta
+            pagoResponse = pagoService.procesarPago(compra.getToken(), total, false, compra.getFormaPago());
+
+            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = compraService.procesarCompra(compra, null);
         }
 
-        if(compraResponse.getEstado().equals("aprobado")){
+        if(!pagoResponse.getEstado().equals("aprobado")) compraResponse = new CompraResponse("rechazada", pagoResponse.getMensaje());
+
+        if(compraResponse.getEstado().equals("aprobada")){
             return ResponseEntity.ok(compraResponse);
         }else{
             return ResponseEntity.badRequest().body(compraResponse);

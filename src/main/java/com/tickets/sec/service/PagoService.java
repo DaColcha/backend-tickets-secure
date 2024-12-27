@@ -28,7 +28,8 @@ public class PagoService {
     @Autowired
     private FormaPagoRepository formaPagoRepository;
 
-    public PagoResponse procesarPago(String token, BigDecimal amount) {
+
+    public PagoResponse procesarPago(String token, BigDecimal amount, boolean useCard, String formaPago) {
         log.info("Processing payment for amount: {}", amount);
 
         try {
@@ -44,22 +45,38 @@ public class PagoService {
             Pago pago = new Pago();
             pago.setId(UUID.randomUUID());
             pago.setFechaPago(LocalDate.now());
-            pago.setFormapago(formaPagoRepository.findById(3).get());
-            pago.setComprobante(comprobante);
             pago.setEstado("aprobado");
 
-            pagoRepository.save(pago);
+            if(useCard){
+                pago.setFormapago(formaPagoRepository.findById(3).get());
+                pago.setComprobante(comprobante);
 
-            log.info("Pago procesado con éxito. Comprobante: {}", comprobante);
+                pagoRepository.save(pago);
 
-            return new PagoResponse(
-                    pago.getId(),
-                    pago.getComprobante(),
-                    pago.getEstado(),
-                    "Pago procesado con éxito",
-                    amount,
-                    LocalDateTime.now()
-            );
+                log.info("Pago con tarjeta procesado con éxito. Comprobante: {}", comprobante);
+
+                return new PagoResponse(
+                        pago.getId(),
+                        pago.getComprobante(),
+                        pago.getEstado(),
+                        "Pago con tarjeta procesado con éxito",
+                        amount,
+                        LocalDateTime.now()
+                );
+            }else{
+                pago.setFormapago(formaPagoRepository.findByFormaPago(formaPago));
+                pagoRepository.save(pago);
+
+                log.info("Pago sin  tarjeta procesado con éxito.");
+                return new PagoResponse(
+                        pago.getId(),
+                        null,
+                        "aprobado",
+                        "Pago sin tarjeta procesado con éxito",
+                        amount,
+                        LocalDateTime.now()
+                );
+            }
 
         } catch (Exception e) {
             log.error("Error al procesar pago: {}", e.getMessage());

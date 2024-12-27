@@ -47,23 +47,26 @@ public class ZonaGeneralController {
     @PostMapping("/compra")
     public ResponseEntity<CompraResponse> compraGeneralAbonado(@RequestBody CompraGeneral compra) {
         CompraResponse compraResponse = new CompraResponse("", "");
+        PagoResponse pagoResponse = new PagoResponse();
+
+        BigDecimal total = zonaGeneralService.calcularTotal(compra.getCantidad());
 
         if (compra.getFormaPago().equals(Constants.PAGO_TARJETA)) {
 
-            BigDecimal total = zonaGeneralService.calcularTotal(compra.getCantidad());
+            pagoResponse = pagoService.procesarPago(compra.getToken(), total, true, null );
 
-            PagoResponse pagoResponse = pagoService.procesarPago(compra.getToken(), total);
+            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = zonaGeneralService.procesarCompraGeneral(compra, pagoResponse.getId());
 
-            if (pagoResponse.getEstado().equals("aprobado")) {
-                compraResponse = zonaGeneralService.procesarCompraGeneral(compra, pagoResponse.getId());
-            }else {
-                compraResponse = new CompraResponse("rechazada", pagoResponse.getMensaje());
-            }
         }else {
-            compraResponse = zonaGeneralService.procesarCompraGeneral(compra, null);
+            pagoResponse = pagoService.procesarPago(compra.getToken(), total, false, compra.getFormaPago());
+
+            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = zonaGeneralService.procesarCompraGeneral(compra, null);
+
         }
 
-        if(compraResponse.getEstado().equals("aprobado")){
+        if(!pagoResponse.getEstado().equals("aprobado")) compraResponse = new CompraResponse("rechazada", pagoResponse.getMensaje());
+
+        if(compraResponse.getEstado().equals("aprobada")){
             return ResponseEntity.ok(compraResponse);
         }else{
             return ResponseEntity.badRequest().body(compraResponse);
