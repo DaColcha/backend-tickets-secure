@@ -15,11 +15,11 @@ import java.util.Set;
 @Table(name = "ventas_asientos_numerados")
 public class VentasAsientosNumerado {
     @Id
-    @ColumnDefault("nextval('ventas_asientos_numerados_id_seq')")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ventas_asientos_seq")
+    @SequenceGenerator(name = "ventas_asientos_seq", sequenceName = "ventas_asientos_numerados_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ElementCollection
     @Column(name = "asientos", nullable = false)
     private List<Integer> asientos;
 

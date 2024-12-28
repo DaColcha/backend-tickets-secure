@@ -1,14 +1,17 @@
 package com.tickets.sec.controller;
 
-import com.tickets.sec.model.Entity.*;
-import com.tickets.sec.repository.*;
+import com.tickets.sec.dto.CompraResponse;
+import com.tickets.sec.dto.PagoResponse;
+import com.tickets.sec.model.Entity.TokenData;
+import com.tickets.sec.service.CompraService;
+import com.tickets.sec.service.PagoService;
+import com.tickets.sec.service.TokenizationService;
 import com.tickets.sec.utils.Constants;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tickets.sec.dto.Compra;
+import com.tickets.sec.dto.CompraNumerados;
 
-import java.util.List;
-import java.util.UUID;
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,92 +24,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class CompraController {
 
     @Autowired
-    private AbonadoController abonadoController;
+    private CompraService compraService;
+
     @Autowired
-    private AsientosRepository asientoRepository;
-    @Autowired
-    private SitioVentaRepository sitioVentaRepository;
-    @Autowired
-    private VentaRepository ventaRepository;
-    @Autowired
-    private VentasAsientosNumeradosRepository ventaAsientosNumeradoRepository;
-    @Autowired
-    private CredencialesSitioRepository credencialesSitioRepository;
+    private PagoService pagoService;
 
     @PostMapping
-    public ResponseEntity<Compra> saveCompra(@RequestBody Compra compra) {
+    public ResponseEntity<CompraResponse> saveCompra(@RequestBody CompraNumerados compra) {
 
-        List<AsientosNumerado> seleccionados = asientoRepository.findSeleccionados(compra.getLocalidad(), compra.getZona(),
-                compra.getTipo(), compra.getAsientosSeleccionados());
+        CompraResponse compraResponse = new CompraResponse("", "");
+        PagoResponse pagoResponse = new PagoResponse();
 
-        VentasAsientosNumerado v = new VentasAsientosNumerado();
+        //Calculamos total de la compra
+        BigDecimal total = compraService.getTotalVenta(compra.getLocalidad(), compra.getTipo(), compra.getAsientosSeleccionados().size());
 
-        if (seleccionados.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        } else {
-            v.setAsientos(
-                    seleccionados.stream()
-                            .map(AsientosNumerado::getId)
-                            .collect(java.util.stream.Collectors.toList()));
-            v.setCantidad(seleccionados.size());
+        if(compra.getFormaPago().equals(Constants.PAGO_TARJETA)){
 
-            VentasAsientosNumerado ventaNumeradaSaved = ventaAsientosNumeradoRepository.save(v);
+            //Procesamos pago con tarjeta
+            pagoResponse = pagoService.procesarPago(compra.getToken(), total, true, null);
 
-            if (compra.getTipoCompra().equals("A")) {
-                compra.setComprador(abonadoController.guardarAbonado(compra.getComprador()));
-                seleccionados.stream().forEach(a -> {
+            //Si el pago fue exitoso, procedemos a guardar la venta
+            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = compraService.procesarCompra(compra, pagoResponse.getId());
+        }else{
 
-                    a.setEstado("N");
-                    asientoRepository.save(a);
+            //procesamos pago sin tarjeta
+            pagoResponse = pagoService.procesarPago(compra.getToken(), total, false, compra.getFormaPago());
 
-                    Venta venta = new Venta();
-                    venta.setVentaNumerada(ventaNumeradaSaved);
-                    venta.setPago(new Pago(
-                            UUID.randomUUID(),
-                            compra.getFormaPago(),
-                            java.time.LocalDate.now(),
-                            null,
-                            "P"));
-                    venta.setVendedor(credencialesSitioRepository.findById(compra.getVendedor()).get());
-                    venta.setAbonado(compra.getComprador());
-                    venta.setFechaVenta(java.time.LocalDate.now());
-                    venta.setTotalVenta(java.math.BigDecimal.valueOf
-                            (v.getCantidad() * getCostoAsiento(compra.getLocalidad(), compra.getTipo())));
-
-                    ventaRepository.save(venta);
-                });
-            } else {
-                seleccionados.stream().forEach(a -> {
-                    a.setEstado("N");
-                    asientoRepository.save(a);
-
-                    Venta venta = new Venta();
-                    venta.setVentaNumerada(ventaNumeradaSaved);
-                    venta.setPago(new Pago(
-                            UUID.randomUUID(),
-                            compra.getFormaPago(),
-                            java.time.LocalDate.now(),
-                            null,
-                            "P"));
-                    venta.setVendedor(credencialesSitioRepository.findById(compra.getVendedor()).get());
-                    venta.setFechaVenta(java.time.LocalDate.now());
-                    venta.setTotalVenta(java.math.BigDecimal.valueOf
-                            (v.getCantidad() * getCostoAsiento(compra.getLocalidad(), compra.getTipo())));
-
-                    ventaRepository.save(venta);
-                });
-            }
+            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = compraService.procesarCompra(compra, null);
         }
 
-        return ResponseEntity.ok(compra);
-    }
+        if(!pagoResponse.getEstado().equals("aprobado")) compraResponse = new CompraResponse("rechazada", pagoResponse.getMensaje());
 
-    private double getCostoAsiento(String localidad, String tipo) {
-        try {
-            return Double.parseDouble(String.valueOf(Constants.class.getField("PRECIO_" + localidad +"_" +tipo).get(null)));
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+        if(compraResponse.getEstado().equals("aprobada")){
+            return ResponseEntity.ok(compraResponse);
+        }else{
+            return ResponseEntity.badRequest().body(compraResponse);
         }
     }
+
 
 }

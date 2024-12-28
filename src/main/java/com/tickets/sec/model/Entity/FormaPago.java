@@ -27,4 +27,10 @@ public class FormaPago {
     @OneToMany(mappedBy = "formapago")
     private Set<Pago> pagos = new LinkedHashSet<>();
 
+    public FormaPago() {
+    }
+
+    public FormaPago(String formaPago) {
+        this.formaPago = formaPago;
+    }
 }

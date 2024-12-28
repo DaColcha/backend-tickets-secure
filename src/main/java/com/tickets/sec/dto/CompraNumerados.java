@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Compra {
+public class CompraNumerados {
 
     private String localidad;
     private String zona;
@@ -17,20 +17,21 @@ public class Compra {
     private Abonado comprador;
     private List<Integer> asientosSeleccionados;
     private String tipoCompra;
-    private Integer vendedor;
-    private FormaPago formaPago;
-    private String plazo;
+    private String vendedor;
+    private String formaPago;
 
-    public Compra() {
+    private String token;
+
+    public CompraNumerados() {
     }
 
-    public Compra(String zona, String tipo, List<Integer> asientosSeleccionados) {
+    public CompraNumerados(String zona, String tipo, List<Integer> asientosSeleccionados) {
         this.zona = zona;
         this.tipo = tipo;
         this.asientosSeleccionados = asientosSeleccionados;
     }
 
-    public Compra(String localidad, String zona, String tipo, List<Integer> asientosSeleccionados) {
+    public CompraNumerados(String localidad, String zona, String tipo, List<Integer> asientosSeleccionados) {
         this.zona = zona;
         this.tipo = tipo;
         this.asientosSeleccionados = asientosSeleccionados;

@@ -14,7 +14,8 @@ import java.time.LocalDate;
 @Table(name = "ventas")
 public class Venta {
     @Id
-    @ColumnDefault("nextval('ventas_id_seq')")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ventas_id_seq")
+    @SequenceGenerator(name = "ventas_id_seq", sequenceName = "ventas_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Integer id;
 

@@ -14,7 +14,8 @@ import java.util.Set;
 @Table(name = "ventas_zona_general")
 public class VentasZonaGeneral {
     @Id
-    @ColumnDefault("nextval('ventas_zona_general_id_seq')")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ventas_zona_general_seq")
+    @SequenceGenerator(name = "ventas_zona_general_seq", sequenceName = "ventas_zona_general_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -28,4 +29,12 @@ public class VentasZonaGeneral {
     @OneToMany(mappedBy = "ventaZonaGeneral")
     private Set<Venta> ventas = new LinkedHashSet<>();
 
+    public VentasZonaGeneral(ZonaGeneral zonaGeneral, Integer cantidad) {
+        this.zonaGeneral = zonaGeneral;
+        this.cantidad = cantidad;
+    }
+
+    public VentasZonaGeneral() {
+
+    }
 }

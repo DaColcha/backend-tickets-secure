@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tickets.sec.dto.Compra;
+import com.tickets.sec.dto.CompraNumerados;
 import com.tickets.sec.repository.ZonaGeneralRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +54,7 @@ public class AsientoController {
 
     @Transactional
     @PatchMapping("/limpiar-no-abonado")
-    public ResponseEntity<String> clearSitNoAbonated(@RequestBody Compra compraNoAbonado) {
+    public ResponseEntity<String> clearSitNoAbonated(@RequestBody CompraNumerados compraNoAbonado) {
 
         asientoRepository.cleanSitNoAbonate(compraNoAbonado.getLocalidad(),
                 compraNoAbonado.getZona(),
