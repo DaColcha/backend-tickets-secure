@@ -14,15 +14,17 @@ public class LoginResponse {
     private String rol;
     private String sitio;
     private String usuario;
+    private String token;
 
     public LoginResponse() {
     }
 
-    public LoginResponse(UUID id, String rol, String sitio, String usuario) {
+    public LoginResponse(UUID id, String rol, String sitio, String usuario, String token) {
         this.rol = rol;
         this.id = id;
         this.sitio = sitio;
         this.usuario = usuario;
+        this.token = token;
     }
 
 }
