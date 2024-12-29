@@ -8,6 +8,7 @@ import com.tickets.sec.repository.AsientosRepository;
 import com.tickets.sec.repository.VentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +46,7 @@ public class AsientoController {
         return asientoRepository.zoneAvailable(localidad, zona, tipo);
     }
 
+    @PreAuthorize("hasRole('admin')")
     @SuppressWarnings("null")
     @PostMapping("/create-sits")
     public ResponseEntity<AsientosNumerado> createSits(@RequestBody List<AsientosNumerado> asientos) {

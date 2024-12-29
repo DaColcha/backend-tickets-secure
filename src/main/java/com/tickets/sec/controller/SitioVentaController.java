@@ -1,8 +1,7 @@
 package com.tickets.sec.controller;
 
-import com.tickets.sec.model.Entity.Credenciales;
 import com.tickets.sec.model.Entity.SitioVenta;
-import com.tickets.sec.repository.CredencialesRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tickets.sec.repository.SitioVentaRepository;
@@ -29,6 +28,7 @@ public class SitioVentaController {
         return sitioVentaRepository.findAll();
     }
 
+    @PreAuthorize("hasRole('admin')")
     @SuppressWarnings("null")
     @PostMapping("/crear")
     public ResponseEntity<SitioVenta> createSitioVenta(@RequestBody SitioVenta sitioVenta) {

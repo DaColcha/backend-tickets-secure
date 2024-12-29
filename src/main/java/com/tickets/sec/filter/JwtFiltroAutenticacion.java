@@ -1,4 +1,4 @@
-package com.tickets.sec.config;
+package com.tickets.sec.filter;
 
 import com.tickets.sec.model.Entity.Credenciales;
 import com.tickets.sec.repository.CredencialesRepository;
@@ -46,7 +46,7 @@ public class JwtFiltroAutenticacion extends OncePerRequestFilter {
 
         final String jwtToken = authHeader.substring(7);
         final String usuario = jwtService.extraerUsuario(jwtToken);
-        if (usuario == null || SecurityContextHolder.getContext().getAuthentication() != null) {
+        if (usuario == null) {
             return;
         }
 

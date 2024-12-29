@@ -2,6 +2,7 @@ package com.tickets.sec.controller;
 
 import com.tickets.sec.repository.AsientosRepository;
 import com.tickets.sec.repository.VentaRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import com.tickets.sec.dto.ReporteComprado;
 import com.tickets.sec.dto.ReporteGeneral;
@@ -47,16 +48,19 @@ public class VendidosController {
                 asientoRepository.findAbonadoByLocalidad(localidad.toUpperCase().substring(0, 1)));
     }
 
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/abonados")
     public List<ReporteComprado> getAbonados() {
         return reportesComprado.createReport(asientoRepository.findAbonados());
     }
 
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/abonados/total")
     public Integer getTotalAbonados() {
         return asientoRepository.totalAbonados();
     }
 
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/general/{zona}")
     public ReporteGeneral getVendidos(@PathVariable String zona) {
         Integer disponibles = zonaGeneralRepository.findByLocalidad(zona).getDisponibles();
@@ -64,6 +68,7 @@ public class VendidosController {
         return new ReporteGeneral(disponibles, vendidos);
     }
 
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/general")
     public List<ReporteGeneralAbonado> getVendidos() {
         ReporteGeneralAbonado reporte = new ReporteGeneralAbonado();
