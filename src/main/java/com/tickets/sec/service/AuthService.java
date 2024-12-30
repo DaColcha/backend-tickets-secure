@@ -4,20 +4,18 @@ import com.tickets.sec.dto.Login;
 import com.tickets.sec.dto.LoginResponse;
 import com.tickets.sec.model.Entity.Credenciales;
 import com.tickets.sec.model.Entity.CredencialesSitio;
+import com.tickets.sec.model.Entity.TokensJwtExpirados;
 import com.tickets.sec.repository.CredencialesRepository;
 import com.tickets.sec.repository.CredencialesSitioRepository;
+import com.tickets.sec.repository.TokensJwtExpiradosRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,6 +32,9 @@ public class AuthService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private TokensJwtExpiradosRepository tokensJwtExpiradosRepository;
 
     public LoginResponse login(Login loginRequest) {
 
@@ -65,6 +66,24 @@ public class AuthService {
         } catch (AuthenticationException e) {
             return null;
         }
+
+    }
+
+    public boolean logout(String token) {
+
+        String usuario = jwtService.extraerUsuario(token);
+
+        if (usuario != null) {
+            Credenciales credenciales = credencialesRepository.findFirstByUsuario(usuario);
+            TokensJwtExpirados tokenExpirado = new TokensJwtExpirados();
+            tokenExpirado.setToken(token);
+            tokenExpirado.setCredenciales(credenciales);
+            tokensJwtExpiradosRepository.save(tokenExpirado);
+            SecurityContextHolder.clearContext();
+            return true;
+        }
+
+        return false;
 
     }
 

@@ -33,13 +33,15 @@ public class JwtFiltroAutenticacion extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getServletPath().contains("/auth")) {
+        if (request.getServletPath().contains("/auth/login")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token inválido o expirado");
             filterChain.doFilter(request, response);
             return;
         }
@@ -47,6 +49,8 @@ public class JwtFiltroAutenticacion extends OncePerRequestFilter {
         final String jwtToken = authHeader.substring(7);
         final String usuario = jwtService.extraerUsuario(jwtToken);
         if (usuario == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token inválido o expirado");
             return;
         }
 
@@ -59,6 +63,8 @@ public class JwtFiltroAutenticacion extends OncePerRequestFilter {
 
         final boolean tokenValido = jwtService.verificarValidezToken(jwtToken, credenciales);
         if (!tokenValido) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token inválido o expirado");
             return;
         }
 
