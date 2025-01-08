@@ -11,6 +11,7 @@ import com.tickets.sec.service.AbonadoService;
 import com.tickets.sec.service.PagoService;
 import com.tickets.sec.service.ZonaGeneralService;
 import com.tickets.sec.utils.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tickets.sec.repository.SitioVentaRepository;
@@ -32,6 +33,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/zona-general")
+@Slf4j
 public class ZonaGeneralController {
 
     @Autowired
@@ -46,29 +48,14 @@ public class ZonaGeneralController {
 
     @PostMapping("/compra")
     public ResponseEntity<CompraResponse> compraGeneralAbonado(@RequestBody CompraGeneral compra) {
-        CompraResponse compraResponse = new CompraResponse("", "");
-        PagoResponse pagoResponse = new PagoResponse();
 
-        BigDecimal total = zonaGeneralService.calcularTotal(compra.getCantidad());
-
-        if (compra.getFormaPago().equals(Constants.PAGO_TARJETA)) {
-
-            pagoResponse = pagoService.procesarPago(compra.getToken(), total, true, null );
-
-            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = zonaGeneralService.procesarCompraGeneral(compra, pagoResponse.getId());
-
-        }else {
-            pagoResponse = pagoService.procesarPago(compra.getToken(), total, false, compra.getFormaPago());
-
-            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = zonaGeneralService.procesarCompraGeneral(compra, null);
-
-        }
-
-        if(!pagoResponse.getEstado().equals("aprobado")) compraResponse = new CompraResponse("rechazada", pagoResponse.getMensaje());
+        CompraResponse compraResponse = zonaGeneralService.procesarCompraGeneral(compra);
 
         if(compraResponse.getEstado().equals("aprobada")){
+            log.info("Compra de asientos en zona general completada. Vendedor: {}. #Compra: {}", compra.getVendedor(),compraResponse.getIdCompra() );
             return ResponseEntity.ok(compraResponse);
         }else{
+            log.info("La compra de asientos en zona general no pudo ser completada. Vendedor: {}", compra.getVendedor());
             return ResponseEntity.badRequest().body(compraResponse);
         }
     }

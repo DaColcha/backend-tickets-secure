@@ -1,6 +1,7 @@
 package com.tickets.sec.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tickets.sec.dto.PaymentData;
 import com.tickets.sec.dto.Tarjeta;
 import com.tickets.sec.exceptions.CardValidationException;
 import com.tickets.sec.exceptions.TokenException;
@@ -31,12 +32,11 @@ public class TokenizationService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public String createToken(String encryptedData) {
+    public String createToken(PaymentData encryptedData) {
 
-        if(encryptedData != null) {
+        if(encryptedData.getUseCard()) {
             try{
-                String decryptedData = cryptoUtils.decrypt(encryptedData);
-                System.out.println("Datos descifrados: "+decryptedData);
+                String decryptedData = cryptoUtils.decrypt(encryptedData.getEncryptedData());
                 Tarjeta cardData = objectMapper.readValue(decryptedData, Tarjeta.class);
 
                 // Validar datos de tarjeta
@@ -55,7 +55,7 @@ public class TokenizationService {
         tokenData.setUsed(false);
 
         tokenRepository.save(tokenData);
-        log.info("Token created successfully");
+        log.info("Se ha creado un token de pago.");
 
         return token;
     }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Slf4j
@@ -32,14 +32,13 @@ public class CompraService {
     @Autowired
     private PagoRepository pagoRepository;
 
-    public CompraResponse procesarCompra(CompraNumerados compra, UUID pagoId) {
+    public CompraResponse procesarCompra(CompraNumerados compra) {
         //Buscamos los objetos tipo asiento según los seleccionados en la compra
         List<AsientosNumerado> seleccionados = asientoRepository.findSeleccionados(compra.getLocalidad(), compra.getZona(),
                 compra.getTipo(), compra.getAsientosSeleccionados());
 
-
         if (seleccionados.isEmpty()) {
-            return new CompraResponse("rechazada", "No se encontraron asientos seleccionados");
+            return new CompraResponse("rechazada", "No se encontraron asientos seleccionados", 0);
         } else {
 
             VentasAsientosNumerado v = new VentasAsientosNumerado();
@@ -57,21 +56,23 @@ public class CompraService {
             if (isAbonado(compra.getTipoCompra()))
                 compra.setComprador(abonadoService.guardarAbonado(compra.getComprador()));
 
+            AtomicReference<Integer> ventaSaved = new AtomicReference<>(0);
             seleccionados.forEach(a -> {
                 this.setAsientoOcupado(a);
 
                 Venta venta = new Venta();
                 venta.setVentaNumerada(ventaNumeradaSaved);
-                venta.setPago(pagoId != null ? pagoRepository.findById(pagoId).get() : null);
+                venta.setPago(pagoRepository.findById(compra.getIdPago()).get());
                 venta.setVendedor(credencialesSitioRepository.findByUsuario(compra.getVendedor()));
                 venta.setAbonado(compra.getComprador());
                 venta.setFechaVenta(java.time.LocalDate.now());
                 venta.setTotalVenta(getTotalVenta(compra.getLocalidad(), compra.getTipo(), compra.getAsientosSeleccionados().size()));
 
                 ventaRepository.save(venta);
+                ventaSaved.set(venta.getId());
             });
 
-            return new CompraResponse("aprobada", "Compra realizada con éxito");
+            return new CompraResponse("aprobada", "Compra realizada con éxito", ventaSaved.get());
         }
     }
 

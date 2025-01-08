@@ -30,7 +30,7 @@ public class PagoService {
 
 
     public PagoResponse procesarPago(String token, BigDecimal amount, boolean useCard, String formaPago) {
-        log.info("Processing payment for amount: {}", amount);
+        log.info("Procesando pago de: {}", amount);
 
         try {
             // Validar y obtener datos del token
@@ -53,7 +53,7 @@ public class PagoService {
 
                 pagoRepository.save(pago);
 
-                log.info("Pago con tarjeta procesado con éxito. Comprobante: {}", comprobante);
+                log.info("Pago con tarjeta procesado con exito. Comprobante: {}", comprobante);
 
                 return new PagoResponse(
                         pago.getId(),

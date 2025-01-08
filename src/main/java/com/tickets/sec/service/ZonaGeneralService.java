@@ -36,7 +36,7 @@ public class ZonaGeneralService {
         return zonaGeneralRepository.findByLocalidad(zona).getDisponibles();
     }
 
-    public CompraResponse procesarCompraGeneral(CompraGeneral compra, UUID pagoId){
+    public CompraResponse procesarCompraGeneral(CompraGeneral compra){
 
         VentasZonaGeneral ventaGeneral = new VentasZonaGeneral();
 
@@ -53,7 +53,7 @@ public class ZonaGeneralService {
             //Almacenamos la venta
             Venta venta = new Venta();
             venta.setVentaZonaGeneral(ventaGeneral);
-            venta.setPago(pagoId != null ? pagoRepository.findById(pagoId).get(): null);
+            venta.setPago(pagoRepository.findById(compra.getIdPago()).get());
             venta.setVendedor(credencialesSitioRepository.findByUsuario(compra.getVendedor()));
             venta.setAbonado(compra.getComprador());
             venta.setFechaVenta(java.time.LocalDate.now());
@@ -66,10 +66,10 @@ public class ZonaGeneralService {
             zona.setDisponibles(zona.getDisponibles() - compra.getCantidad());
             zonaGeneralRepository.save(zona);
 
-            return new CompraResponse("aprobada", "Compra realizada con éxito");
+            return new CompraResponse("aprobada", "Compra realizada con éxito", venta.getId());
 
         } else {
-            return new CompraResponse("rechazado", "No hay suficientes boletos");
+            return new CompraResponse("rechazado", "No hay suficientes boletos", 0);
         }
     }
 

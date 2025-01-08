@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,8 +20,7 @@ public class CompraNumerados {
     private String tipoCompra;
     private String vendedor;
     private String formaPago;
-
-    private String token;
+    private UUID idPago;
 
     public CompraNumerados() {
     }

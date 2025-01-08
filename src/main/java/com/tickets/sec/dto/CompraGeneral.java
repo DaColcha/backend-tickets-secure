@@ -5,6 +5,8 @@ import com.tickets.sec.model.Entity.FormaPago;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class CompraGeneral {
@@ -15,6 +17,5 @@ public class CompraGeneral {
     private String tipoCompra;
     private String vendedor;
     private String formaPago;
-
-    private String token;
+    private UUID idPago;
 }

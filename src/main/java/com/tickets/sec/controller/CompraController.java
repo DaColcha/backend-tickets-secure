@@ -7,6 +7,7 @@ import com.tickets.sec.service.CompraService;
 import com.tickets.sec.service.PagoService;
 import com.tickets.sec.service.TokenizationService;
 import com.tickets.sec.utils.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tickets.sec.dto.CompraNumerados;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/compra")
+@Slf4j
 public class CompraController {
 
     @Autowired
@@ -32,32 +34,14 @@ public class CompraController {
     @PostMapping
     public ResponseEntity<CompraResponse> saveCompra(@RequestBody CompraNumerados compra) {
 
-        CompraResponse compraResponse = new CompraResponse("", "");
-        PagoResponse pagoResponse = new PagoResponse();
+        CompraResponse compraResponse = compraService.procesarCompra(compra);
 
-        //Calculamos total de la compra
-        BigDecimal total = compraService.getTotalVenta(compra.getLocalidad(), compra.getTipo(), compra.getAsientosSeleccionados().size());
-
-        if(compra.getFormaPago().equals(Constants.PAGO_TARJETA)){
-
-            //Procesamos pago con tarjeta
-            pagoResponse = pagoService.procesarPago(compra.getToken(), total, true, null);
-
-            //Si el pago fue exitoso, procedemos a guardar la venta
-            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = compraService.procesarCompra(compra, pagoResponse.getId());
-        }else{
-
-            //procesamos pago sin tarjeta
-            pagoResponse = pagoService.procesarPago(compra.getToken(), total, false, compra.getFormaPago());
-
-            if (pagoResponse.getEstado().equals("aprobado")) compraResponse = compraService.procesarCompra(compra, null);
-        }
-
-        if(!pagoResponse.getEstado().equals("aprobado")) compraResponse = new CompraResponse("rechazada", pagoResponse.getMensaje());
 
         if(compraResponse.getEstado().equals("aprobada")){
+            log.info("Compra de asientos numerados completada. Vendedor: {}. #Compra: {}", compra.getVendedor(),compraResponse.getIdCompra() );
             return ResponseEntity.ok(compraResponse);
         }else{
+            log.info("La compra de asientos numerados no pudo ser completada. Vendedor: {}", compra.getVendedor());
             return ResponseEntity.badRequest().body(compraResponse);
         }
     }
