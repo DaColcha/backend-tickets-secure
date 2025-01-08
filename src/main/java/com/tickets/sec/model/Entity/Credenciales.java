@@ -26,6 +26,9 @@ public class Credenciales {
     @Column(name = "rol", nullable = false, length = 20)
     private String rol;
 
+    @Column(name = "email", nullable = false, length = 100)
+    private String email;
+
     @OneToMany(mappedBy = "credencial")
     private Set<CredencialesSitio> credencialesSitios = new LinkedHashSet<>();
 

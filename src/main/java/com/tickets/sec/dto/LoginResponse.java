@@ -15,7 +15,6 @@ public class LoginResponse {
     private String sitio;
     private String usuario;
     private String token;
-
     public LoginResponse() {
     }
 

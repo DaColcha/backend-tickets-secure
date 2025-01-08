@@ -36,7 +36,13 @@ public class AuthService {
     @Autowired
     private TokensJwtExpiradosRepository tokensJwtExpiradosRepository;
 
-    public LoginResponse login(Login loginRequest) {
+    @Autowired
+    private OTPService otpService;
+
+    @Autowired
+    private EmailService emailService;
+
+    public boolean login(Login loginRequest) {
 
         try {
             gestorAutenticacion.authenticate(new UsernamePasswordAuthenticationToken(
@@ -47,26 +53,32 @@ public class AuthService {
             Credenciales credencialesResponse = credencialesRepository.findFirstByUsuario(loginRequest.getUsuario());
 
             if (credencialesResponse != null) {
-                UUID id = credencialesResponse.getId();
-                CredencialesSitio info = credencialesSitioRepository.findByCredencialId(id);
+                String otp = otpService.generateOTP(credencialesResponse.getUsuario());
+                emailService.sendEmail(credencialesResponse.getEmail(), otp);
 
-                Credenciales credenciales = credencialesRepository.findFirstByUsuario(loginRequest.getUsuario());
-                String jwtToken = jwtService.generarToken(credenciales);
-
-                return new LoginResponse(
-                        id,
-                        credencialesResponse.getRol(),
-                        info.getSitioVenta().getNombre(),
-                        loginRequest.getUsuario(),
-                        jwtToken
-                );
+                return true;
             } else {
-                return null;
+                return false;
             }
         } catch (AuthenticationException e) {
-            return null;
+            return false;
         }
+    }
 
+    public LoginResponse confirmLogin(String usuario) {
+        Credenciales credenciales = credencialesRepository.findFirstByUsuario(usuario);
+
+        CredencialesSitio info = credencialesSitioRepository.findByCredencialId(credenciales.getId());
+
+        String jwtToken = jwtService.generarToken(credenciales);
+
+        return new LoginResponse(
+                credenciales.getId(),
+                credenciales.getRol(),
+                info.getSitioVenta().getNombre(),
+                usuario,
+                jwtToken
+        );
     }
 
     public boolean logout(String token) {
