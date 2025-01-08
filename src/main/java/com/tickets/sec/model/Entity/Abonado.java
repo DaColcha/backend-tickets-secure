@@ -25,7 +25,7 @@ public class Abonado {
     @Column(name = "telefono", length = 10)
     private String telefono;
 
-    @OneToMany(mappedBy = "abonado")
+    @OneToMany(mappedBy = "abonado", fetch = FetchType.LAZY)
     private Set<Venta> ventas = new LinkedHashSet<>();
 
 }

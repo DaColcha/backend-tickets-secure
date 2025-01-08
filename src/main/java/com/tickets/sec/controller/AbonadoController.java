@@ -2,6 +2,7 @@ package com.tickets.sec.controller;
 
 import java.util.List;
 
+import com.tickets.sec.dto.AbonadoResponse;
 import com.tickets.sec.model.Entity.Abonado;
 import com.tickets.sec.repository.AbonadoRepository;
 import com.tickets.sec.service.AbonadoService;
@@ -24,6 +25,17 @@ public class AbonadoController {
     @GetMapping
     public List<Abonado> getAbonados() {
         return abonadoService.findAll();
+    }
+
+    @GetMapping("/validar")
+    public ResponseEntity<AbonadoResponse> getAbonadoById(@RequestBody String cedula) {
+        AbonadoResponse cliente = abonadoService.findByCedula(cedula);
+
+        if (cliente == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().body(cliente);
     }
 
     @PostMapping("/crear")

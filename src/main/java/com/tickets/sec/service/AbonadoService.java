@@ -1,5 +1,6 @@
 package com.tickets.sec.service;
 
+import com.tickets.sec.dto.AbonadoResponse;
 import com.tickets.sec.model.Entity.Abonado;
 import com.tickets.sec.repository.AbonadoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -31,5 +32,12 @@ public class AbonadoService {
         }
 
         return cliente;
+    }
+
+    public AbonadoResponse findByCedula(String id) {
+        Abonado cliente = clienteRepository.findByCedula(id);
+
+        return new AbonadoResponse(cliente.getCedula(),
+                cliente.getNombre(), cliente.getCorreo(), cliente.getTelefono());
     }
 }
