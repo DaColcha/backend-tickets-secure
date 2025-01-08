@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface OtpRepository extends JpaRepository<OTP, Long> {
-    Optional<OTP> findByUsername(String username);
+    Optional<OTP> findTopByUsernameOrderByIdDesc(String username);
     void deleteByUsername(String username);
 }

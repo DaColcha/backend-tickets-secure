@@ -34,6 +34,7 @@ public class JwtFiltroAutenticacion extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
         if (request.getServletPath().contains("/auth/login")
+                || request.getServletPath().contains("/auth/verify-otp")
                 || request.getServletPath().contains("/swagger-ui")
                 || request.getServletPath().contains("/v3/api-docs")
                 || request.getServletPath().contains("/swagger-resources")

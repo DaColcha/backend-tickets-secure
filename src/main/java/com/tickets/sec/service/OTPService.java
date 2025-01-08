@@ -2,6 +2,7 @@ package com.tickets.sec.service;
 
 import com.tickets.sec.model.Entity.OTP;
 import com.tickets.sec.repository.OtpRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,9 @@ public class OTPService {
     }
 
     // Validar el OTP
+    @Transactional
     public boolean validateOTP(String username, String otp) {
-        Optional<OTP> otpEntity = otpRepository.findByUsername(username);
+        Optional<OTP> otpEntity = otpRepository.findTopByUsernameOrderByIdDesc(username);
         if (otpEntity.isPresent() && otpEntity.get().getOtp().equals(otp)) {
 
             if (otpEntity.get().getExpirationTime().isAfter(LocalDateTime.now())) {
