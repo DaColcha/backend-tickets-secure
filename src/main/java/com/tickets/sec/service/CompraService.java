@@ -56,23 +56,21 @@ public class CompraService {
             if (isAbonado(compra.getTipoCompra()))
                 compra.setComprador(abonadoService.guardarAbonado(compra.getComprador()));
 
-            AtomicReference<Integer> ventaSaved = new AtomicReference<>(0);
             seleccionados.forEach(a -> {
                 this.setAsientoOcupado(a);
-
-                Venta venta = new Venta();
-                venta.setVentaNumerada(ventaNumeradaSaved);
-                venta.setPago(pagoRepository.findById(compra.getIdPago()).get());
-                venta.setVendedor(credencialesSitioRepository.findByUsuario(compra.getVendedor()));
-                venta.setAbonado(compra.getComprador());
-                venta.setFechaVenta(java.time.LocalDate.now());
-                venta.setTotalVenta(getTotalVenta(compra.getLocalidad(), compra.getTipo(), compra.getAsientosSeleccionados().size()));
-
-                ventaRepository.save(venta);
-                ventaSaved.set(venta.getId());
             });
 
-            return new CompraResponse("aprobada", "Compra realizada con éxito", ventaSaved.get());
+            Venta venta = new Venta();
+            venta.setVentaNumerada(ventaNumeradaSaved);
+            venta.setPago(pagoRepository.findById(compra.getIdPago()).get());
+            venta.setVendedor(credencialesSitioRepository.findByUsuario(compra.getVendedor()));
+            venta.setAbonado(compra.getComprador());
+            venta.setFechaVenta(java.time.LocalDate.now());
+            venta.setTotalVenta(getTotalVenta(compra.getLocalidad(), compra.getTipo(), compra.getAsientosSeleccionados().size()));
+
+            ventaRepository.save(venta);
+
+            return new CompraResponse("aprobada", "Compra realizada con éxito", venta.getId());
         }
     }
 
@@ -84,6 +82,7 @@ public class CompraService {
             try {
                 return Double.parseDouble(String.valueOf(Constants.class.getField("PRECIO_" + localidad + "_" + tipo).get(null)));
             } catch (NoSuchFieldException | IllegalAccessException e) {
+                log.error("Error al obtener el precio del asiento. Localidad: {}, Tipo: {}", localidad, tipo);
                 throw new RuntimeException(e);
             }
     }

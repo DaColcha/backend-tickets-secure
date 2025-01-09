@@ -8,5 +8,4 @@ public class Constants {
     public static final Double PRECIO_T_SILLAS = 10.0;
     public static final Double PRECIO_C_SILLAS = 15.0;
 
-    public static final String PAGO_TARJETA = "Tarjeta crédito/débito";
 }

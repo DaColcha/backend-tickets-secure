@@ -41,7 +41,10 @@ public class CompraController {
             log.info("Compra de asientos numerados completada. Vendedor: {}. #Compra: {}", compra.getVendedor(),compraResponse.getIdCompra() );
             return ResponseEntity.ok(compraResponse);
         }else{
-            log.info("La compra de asientos numerados no pudo ser completada. Vendedor: {}", compra.getVendedor());
+            log.warn("La compra de asientos numerados no pudo ser completada. Vendedor: {}. Localidad: {}. {}",
+                    compra.getVendedor(),
+                    compra.getLocalidad() + "-" + compra.getZona() + "-" + compra.getTipo(),
+                    compraResponse.getMensaje());
             return ResponseEntity.badRequest().body(compraResponse);
         }
     }

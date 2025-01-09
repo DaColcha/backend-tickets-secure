@@ -86,8 +86,8 @@ public class ZonaGeneralService {
     }
 
     public void limpiarGeneral(){
-        Integer boletosA = ventaRepository.totalAbonadosGeneralVendido("A");
-        Integer boletosB = ventaRepository.totalAbonadosGeneralVendido("B");
+        Integer boletosA = this.getTotalAbonadosByZona("A");
+        Integer boletosB = this.getTotalAbonadosByZona("B");
 
         boletosA = (boletosA != null) ? boletosA : 0;
         boletosB = (boletosB != null) ? boletosB : 0;
@@ -95,6 +95,10 @@ public class ZonaGeneralService {
         zonaGeneralRepository.save(new ZonaGeneral("A", 1500 - boletosA));
         zonaGeneralRepository.save(new ZonaGeneral("B", 1500 - boletosB));
 
+    }
+
+    private Integer getTotalAbonadosByZona(String zona){
+        return ventaRepository.totalAbonadosGeneralVendido(zona);
     }
 
     public void limpiarTodo(){

@@ -42,11 +42,12 @@ public class PaymentController {
 
                 return ResponseEntity.ok(pagoResponse);
             }else{
-                log.error("Pago rechazado: {}", pagoResponse.getMensaje());
+                log.warn("Pago rechazado: {}", pagoResponse.getMensaje());
                 return ResponseEntity.badRequest().body(pagoResponse);
             }
 
         }catch (Exception e){
+            log.error("Error al procesar el pago: {}", e.getMessage());
             return ResponseEntity.badRequest().body(
                     new PagoResponse(null,
                             null,

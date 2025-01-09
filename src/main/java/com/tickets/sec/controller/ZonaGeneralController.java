@@ -52,18 +52,22 @@ public class ZonaGeneralController {
         CompraResponse compraResponse = zonaGeneralService.procesarCompraGeneral(compra);
 
         if(compraResponse.getEstado().equals("aprobada")){
-            log.info("Compra de asientos en zona general completada. Vendedor: {}. #Compra: {}", compra.getVendedor(),compraResponse.getIdCompra() );
+            log.info("Compra de asientos en zona general completada. Vendedor: {}. #Compra: {}",
+                    compra.getVendedor(),compraResponse.getIdCompra() );
             return ResponseEntity.ok(compraResponse);
         }else{
-            log.info("La compra de asientos en zona general no pudo ser completada. Vendedor: {}", compra.getVendedor());
+            log.warn("La compra de asientos en zona general no pudo ser completada. Vendedor: {}. Zona General: {}. {}",
+                    compra.getVendedor(), compra.getZona(), compraResponse.getMensaje());
             return ResponseEntity.badRequest().body(compraResponse);
         }
     }
+
 
     @Transactional
     @PatchMapping("/limpiar-todo")
     public ResponseEntity<String> limpiarTodo() {
         zonaGeneralService.limpiarTodo();
+        log.info("Se ha limpiado todos los asientos de la zona general");
         return ResponseEntity.ok("Limpieza exitosa");
     }
 
@@ -71,6 +75,7 @@ public class ZonaGeneralController {
     @PatchMapping("/limpiar")
     public ResponseEntity<String> limpiarGeneral() {
         zonaGeneralService.limpiarGeneral();
+        log.info("Se ha limpiado los asientos de no abonados de la zona general");
         return ResponseEntity.ok("Limpieza exitosa");
     }
 

@@ -3,6 +3,7 @@ package com.tickets.sec.service;
 import com.tickets.sec.model.Entity.OTP;
 import com.tickets.sec.repository.OtpRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,24 +15,22 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+@Slf4j
 public class OTPService {
     @Autowired
     private OtpRepository otpRepository;
 
-    // Generar un OTP y almacenarlo en la base de datos
     public String generateOTP(String username) {
-        // Generar un código OTP de 6 dígitos
         String otp = String.format("%06d", new SecureRandom().nextInt(1000000));
 
-        // Crear una nueva entidad OTP
         OTP otpEntity = new OTP();
         otpEntity.setUsername(username);
         otpEntity.setOtp(otp);
-        otpEntity.setExpirationTime(LocalDateTime.now().plusMinutes(5)); // Expira en 5 minutos
+        otpEntity.setExpirationTime(LocalDateTime.now().plusMinutes(5));
 
-        // Guardar en la base de datos
         otpRepository.save(otpEntity);
 
+        log.info("Se ha generado un nuevo código OTP");
         return otp;
     }
 
@@ -42,7 +41,7 @@ public class OTPService {
         if (otpEntity.isPresent() && otpEntity.get().getOtp().equals(otp)) {
 
             if (otpEntity.get().getExpirationTime().isAfter(LocalDateTime.now())) {
-                otpRepository.deleteByUsername(username); // Eliminar el OTP usado
+                otpRepository.deleteByUsername(username);
                 return true;
             }
         }

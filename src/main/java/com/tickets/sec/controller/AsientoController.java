@@ -6,6 +6,7 @@ import com.tickets.sec.model.Entity.AsientosNumerado;
 import com.tickets.sec.model.Entity.ZonaGeneral;
 import com.tickets.sec.repository.AsientosRepository;
 import com.tickets.sec.repository.VentaRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@Slf4j
 @RestController
 @RequestMapping("/asiento")
 public class AsientoController {
@@ -54,6 +56,7 @@ public class AsientoController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasRole('admin')")
     @Transactional
     @PatchMapping("/limpiar-no-abonado")
     public ResponseEntity<String> clearSitNoAbonated(@RequestBody CompraNumerados compraNoAbonado) {
@@ -66,6 +69,7 @@ public class AsientoController {
         return ResponseEntity.ok("Asientos eliminados ");
     }
 
+    @PreAuthorize("hasRole('admin')")
     @Transactional
     @PatchMapping("/limpiar")
     public ResponseEntity<String> clearAllSitsNoAbonated() {
@@ -82,14 +86,18 @@ public class AsientoController {
         zonaGeneralRepository.save(new ZonaGeneral("A", 1500 - boletosA));
         zonaGeneralRepository.save(new ZonaGeneral("B", 1500 - boletosB));
 
+        log.info("Se han limpiado los asientos no abonados");
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasRole('admin')")
     @Transactional
     @PatchMapping("/limpiar-todo")
     public ResponseEntity<String> clearAllSits() {
         asientoRepository.cleanAllSits();
         zonaGeneralRepository.restartGeneral();
+
+        log.info("Se han limpiado todos los asientos");
         return ResponseEntity.ok().build();
     }
 }

@@ -33,13 +33,10 @@ public class PagoService {
         log.info("Procesando pago de: {}", amount);
 
         try {
-            // Validar y obtener datos del token
             TokenData tokenData = tokenizationService.validateAndGetToken(token);
 
-            // Procesar el pago
             String comprobante = procesamientoEntidad(tokenData, amount);
 
-            // Marcar el token como usado
             tokenData.setUsed(true);
 
             Pago pago = new Pago();
@@ -93,7 +90,7 @@ public class PagoService {
 
     private String procesamientoEntidad(TokenData tokenData, BigDecimal amount) {
         // Simulación de procesamiento
-        // Aquí iría la integración real con el procesador de pagos
+        // Aquí iría la integración real con el procesador de pagoss
         return "TX-" + System.currentTimeMillis();
     }
 

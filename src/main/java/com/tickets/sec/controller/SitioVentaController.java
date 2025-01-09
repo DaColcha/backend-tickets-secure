@@ -1,6 +1,7 @@
 package com.tickets.sec.controller;
 
 import com.tickets.sec.model.Entity.SitioVenta;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/sitio-venta")
+@Slf4j
 public class SitioVentaController {
 
     @Autowired
@@ -33,7 +35,7 @@ public class SitioVentaController {
     @PostMapping("/crear")
     public ResponseEntity<SitioVenta> createSitioVenta(@RequestBody SitioVenta sitioVenta) {
         sitioVentaRepository.save(sitioVenta);
-
+        log.info("Sitio de venta creado con exito");
         return ResponseEntity.ok().build();
     }
 
