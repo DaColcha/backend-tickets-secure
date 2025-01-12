@@ -3,6 +3,7 @@ package com.tickets.sec.service;
 import com.tickets.sec.model.Entity.Credenciales;
 import com.tickets.sec.model.Entity.TokensJwtExpirados;
 import com.tickets.sec.repository.TokensJwtExpiradosRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -51,6 +52,7 @@ public class JwtService {
                 .getSubject();
     }
 
+
     private Date extraerExpiracion(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(generarLlaveSecreta())
@@ -69,23 +71,27 @@ public class JwtService {
     }
 
     public boolean verificarValidezToken(String token, Credenciales credenciales) {
-        final boolean tokenExpirado = verificarTokenExpirado(token);
+        try {
+            final boolean tokenExpirado = verificarTokenExpirado(token);
 
-        if (tokenExpirado) {
-            return false;
-        } else {
-            final String usuario = extraerUsuario(token);
-            final boolean usuarioCoincide = usuario.equals(credenciales.getUsuario());
-            final boolean tiempoTokenExpirado = verificarTiempoExpiracionToken(token);
+            if (tokenExpirado) {
+                return false;
+            } else {
+                final String usuario = extraerUsuario(token);
+                final boolean usuarioCoincide = usuario.equals(credenciales.getUsuario());
+                final boolean tiempoTokenExpirado = verificarTiempoExpiracionToken(token);
 
-            if (tiempoTokenExpirado) {
-                TokensJwtExpirados tokenJwtExpirado = new TokensJwtExpirados();
-                tokenJwtExpirado.setToken(token);
-                tokenJwtExpirado.setCredenciales(credenciales);
-                tokensJwtExpiradosRepository.save(tokenJwtExpirado);
+                if (tiempoTokenExpirado) {
+                    TokensJwtExpirados tokenJwtExpirado = new TokensJwtExpirados();
+                    tokenJwtExpirado.setToken(token);
+                    tokenJwtExpirado.setCredenciales(credenciales);
+                    tokensJwtExpiradosRepository.save(tokenJwtExpirado);
+                }
+
+                return (usuarioCoincide && !tiempoTokenExpirado);
             }
-
-            return (usuarioCoincide && !tiempoTokenExpirado);
+        } catch (ExpiredJwtException e) {
+            return false;
         }
 
     }

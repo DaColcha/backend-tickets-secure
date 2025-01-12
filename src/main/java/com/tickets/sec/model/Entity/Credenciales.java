@@ -1,9 +1,12 @@
 package com.tickets.sec.model.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -31,5 +34,13 @@ public class Credenciales {
 
     @OneToMany(mappedBy = "credencial")
     private Set<CredencialesSitio> credencialesSitios = new LinkedHashSet<>();
+
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "intentosiniciosesionfallidos", nullable = false)
+    private Integer intentosInicioSesionFallidos;
+
+    @Column(name = "tiempobloqueo")
+    private Instant tiempoBloqueo;
 
 }

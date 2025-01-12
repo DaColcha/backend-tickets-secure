@@ -16,8 +16,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -42,26 +40,40 @@ public class AuthService {
     @Autowired
     private EmailService emailService;
 
-    public boolean login(Login loginRequest) {
+    @Autowired
+    private BloqueoUsuarioService bloqueoUsuarioService;
 
-        try {
-            gestorAutenticacion.authenticate(new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsuario(),
-                    loginRequest.getContrasena()
-            ));
+    public static final String LOGIN_EXITOSO = "Inicio de sesión exitoso";
+    public static final String LOGIN_FALLIDO_CREDENCIALES = "Inicio de sesión fallido, credenciales inválidas.";
+    public static final String LOGIN_FALLIDO_BLOQUEO = "Inicio de sesión fallido, cuenta bloqueada temporalmente.";
 
-            Credenciales credencialesResponse = credencialesRepository.findFirstByUsuario(loginRequest.getUsuario());
+    public String login(Login loginRequest) {
+        Credenciales credencialesResponse = credencialesRepository.findFirstByUsuario(loginRequest.getUsuario());
 
-            if (credencialesResponse != null) {
-                String otp = otpService.generateOTP(credencialesResponse.getUsuario());
-                emailService.sendEmail(credencialesResponse.getEmail(), otp);
+        if ((credencialesResponse != null)) {
+            if (!bloqueoUsuarioService.verificarBloqueo(credencialesResponse)) {
+                try {
+                    gestorAutenticacion.authenticate(new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsuario(),
+                            loginRequest.getContrasena()
+                    ));
 
-                return true;
+                    bloqueoUsuarioService.gestionarInicioSesionExitoso(credencialesResponse);
+
+                    String otp = otpService.generateOTP(credencialesResponse.getUsuario());
+                    emailService.sendEmail(credencialesResponse.getEmail(), otp);
+
+                    return LOGIN_EXITOSO;
+                } catch (AuthenticationException e) {
+                    bloqueoUsuarioService.gestionarInicioSesionFallido(credencialesResponse);
+
+                    return LOGIN_FALLIDO_CREDENCIALES;
+                }
             } else {
-                return false;
+                return LOGIN_FALLIDO_BLOQUEO;
             }
-        } catch (AuthenticationException e) {
-            return false;
+        } else {
+            return LOGIN_FALLIDO_CREDENCIALES;
         }
     }
 

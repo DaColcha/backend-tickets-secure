@@ -24,13 +24,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Login credenciales) {
+        String loginResponse = authService.login(credenciales);
 
-        if (authService.login(credenciales)) {
+        if (loginResponse.equals(AuthService.LOGIN_EXITOSO)) {
             log.info("Se ha generado un nuevo código OTP.");
             return ResponseEntity.ok().body("El código OTP ha sido enviado a su correo electrónico.");
         } else {
-            log.warn("Intento de inicio de sesión fallido. Crendenciales inválidas.");
-            return ResponseEntity.badRequest().build();
+            log.warn(loginResponse);
+            return ResponseEntity.badRequest().body(loginResponse);
         }
     }
 
