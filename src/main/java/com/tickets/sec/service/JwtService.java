@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.Map;
 
 @Service
 public class JwtService {
@@ -27,11 +26,14 @@ public class JwtService {
     @Autowired
     TokensJwtExpiradosRepository tokensJwtExpiradosRepository;
 
+    @Autowired
+    EncriptacionService encriptacionService;
+
     public String generarToken(final Credenciales credenciales) {
+        String usuarioEncriptado = encriptacionService.encriptar(credenciales.getUsuario());
         return Jwts.builder()
                 .setId(credenciales.getId().toString())
-                .setClaims(Map.of("usuario", credenciales.getUsuario()))
-                .setSubject(credenciales.getUsuario())
+                .setSubject(usuarioEncriptado)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiracionToken))
                 .signWith(this.generarLlaveSecreta())
@@ -44,12 +46,12 @@ public class JwtService {
     }
 
     public String extraerUsuario(String token) {
-        return Jwts.parserBuilder()
+        return encriptacionService.desencriptar(Jwts.parserBuilder()
                 .setSigningKey(generarLlaveSecreta())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getSubject());
     }
 
 
