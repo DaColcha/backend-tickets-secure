@@ -32,9 +32,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(@SuppressWarnings("null") CorsRegistry registry) {
         registry.addMapping("/**")
-                // .allowedOrigins("https://venta-tickets-leones.vercel.app/")
-                .allowedOrigins("*")
-                .allowedMethods("*").allowedHeaders("*");
+                .allowedOrigins("${orgin.url}")
+                .allowedMethods("*").allowedHeaders("*").allowCredentials(true);
     }
 
     @Bean
