@@ -22,6 +22,15 @@ public class AuthController {
     @Autowired
     private OTPService otpService;
 
+    /**
+     * Método que registra la ruta "/login" y recibe las credenciales de un usuario y genera un código OTP.
+     * @see com.tickets.sec.service.AuthService
+     * @see com.tickets.sec.service.OTPService
+     * 
+     * @param credenciales Datos de inicio de sesión.
+     * 
+     * @return org.springframework.http.ResponseEntity<String> Respuesta de inicio de sesión.
+     */
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Login credenciales) {
         String loginResponse = authService.login(credenciales);
@@ -49,6 +58,14 @@ public class AuthController {
     }
 
 
+    /**
+     * Método que registra la ruta "/logout" y cierra la sesión de un usuario, siempre y cuando tenga un token JWT válido.
+     * @see com.tickets.sec.service.AuthService
+     * 
+     * @param authHeader Encabezado de autorización.
+     * 
+     * @return org.springframework.http.ResponseEntity<?> Respuesta de cierre de sesión.
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
 
