@@ -5,6 +5,7 @@ FROM maven:3.9.9-amazoncorretto-17-alpine AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
+COPY .env .env
 
 RUN mvn clean package -DskipTests
 
@@ -12,15 +13,8 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jdk-alpine
 VOLUME /tmp
 
-ARG DB_CONNECTION_STRING
-ARG DB_USER
-ARG DB_PASSWORD
-
-ENV DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
-ENV DB_USER=${DB_USER}
-ENV DB_PASSWORD=${DB_PASSWORD}
-
 COPY --from=build /app/target/*.jar backend-tickets.jar
+COPY .env .env
 
 ENTRYPOINT ["java", "-jar", "/backend-tickets.jar"]
 EXPOSE 8080
