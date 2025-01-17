@@ -47,6 +47,24 @@ public class AuthService {
     public static final String LOGIN_FALLIDO_CREDENCIALES = "Inicio de sesión fallido, credenciales inválidas.";
     public static final String LOGIN_FALLIDO_BLOQUEO = "Inicio de sesión fallido, cuenta bloqueada temporalmente.";
 
+    /**
+     * Método que gestiona el inicio de sesión de un usuario y lo autentica en el backend.
+     * @see org.springframework.security.authentication.AuthenticationManager
+     * @see com.tickets.sec.repository.CredencialesRepository
+     * 
+     * Si el usuario está bloqueado, devuelve un mensaje de notificación de bloqueo al usuario.
+     * @see  com.tickets.sec.service.BloqueoUsuarioService
+     * 
+     * Si las credenciales son incorrectas, devuelve un mensaje de notificación de credenciales inválidas.
+     * 
+     * Si las credenciales son correctas, autentica al usuario y envía un correo electrónico con un código OTP.
+     * @see com.tickets.sec.service.OTPService
+     * @see com.tickets.sec.service.EmailService
+     * 
+     * @param loginRequest Datos de inicio de sesión.
+     * 
+     * @return java.lang.String Mensaje de respuesta.
+     */
     public String login(Login loginRequest) {
         Credenciales credencialesResponse = credencialesRepository.findFirstByUsuario(loginRequest.getUsuario());
 
@@ -93,6 +111,18 @@ public class AuthService {
         );
     }
 
+    /**
+     * Método que cierra la sesión de un usuario.
+     * @see com.tickets.sec.service.JwtService#extraerUsuario(String)
+     * @see com.tickets.sec.repository.CredencialesRepository
+     * 
+     * Además, almacena el token del usuario en la tabla de tokens expirados.
+     * @see com.tickets.sec.repository.TokensJwtExpiradosRepository
+     * 
+     * @param token Token JWT.
+     * 
+     * @return boolean True si el cierre de sesión ha sido exitoso, false en caso contrario.
+     */
     public boolean logout(String token) {
 
         String usuario = jwtService.extraerUsuario(token);
