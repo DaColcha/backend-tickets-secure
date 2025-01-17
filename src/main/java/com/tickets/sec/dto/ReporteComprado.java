@@ -3,10 +3,14 @@ package com.tickets.sec.dto;
 import com.tickets.sec.model.Entity.Abonado;
 import com.tickets.sec.model.Entity.AsientosNumerado;
 import com.tickets.sec.model.Entity.Pago;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class ReporteComprado {
 
     private Integer id;
@@ -35,78 +39,6 @@ public class ReporteComprado {
         this.sitioVenta = sitioVenta;
         this.pago = pago;
         this.plazo = plazo;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getPlazo() {
-        return plazo;
-    }
-
-    public void setPlazo(String plazo) {
-        this.plazo = plazo;
-    }
-
-    public String getZona() {
-        return zona;
-    }
-
-    public void setZona(String zona) {
-        this.zona = zona;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public List<Integer> getAsientos() {
-        return asientos;
-    }
-
-    public void setAsientos(List<Integer> asientos) {
-        this.asientos = asientos;
-    }
-
-    public Abonado getComprador() {
-        return comprador;
-    }
-
-    public void setComprador(Abonado comprador) {
-        this.comprador = comprador;
-    }
-
-    public String getTipoCompra() {
-        return tipoCompra;
-    }
-
-    public void setTipoCompra(String tipoCompra) {
-        this.tipoCompra = tipoCompra;
-    }
-
-    public String getSitioVenta() {
-        return sitioVenta;
-    }
-
-    public void setSitioVenta(String sitioVenta) {
-        this.sitioVenta = sitioVenta;
-    }
-
-    public Pago getPago() {
-        return pago;
-    }
-
-    public void setPago(Pago pago) {
-        this.pago = pago;
     }
 
     public List<ReporteComprado> createReport(List<AsientosNumerado> asientos) {

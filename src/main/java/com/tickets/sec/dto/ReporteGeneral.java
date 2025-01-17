@@ -1,5 +1,10 @@
 package com.tickets.sec.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ReporteGeneral {
 
     private Integer disponibles;
@@ -9,21 +14,4 @@ public class ReporteGeneral {
         this.disponibles = disponibles;
         this.vendidos = vendidos;
     }
-
-    public Integer getDisponibles() {
-        return disponibles;
-    }
-
-    public void setDisponibles(Integer disponibles) {
-        this.disponibles = disponibles;
-    }
-
-    public Integer getVendidos() {
-        return vendidos;
-    }
-
-    public void setVendidos(Integer vendidos) {
-        this.vendidos = vendidos;
-    }
-
 }

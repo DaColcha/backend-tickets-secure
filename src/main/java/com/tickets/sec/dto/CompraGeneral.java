@@ -1,7 +1,6 @@
 package com.tickets.sec.dto;
 
 import com.tickets.sec.model.Entity.Abonado;
-import com.tickets.sec.model.Entity.FormaPago;
 import lombok.Getter;
 import lombok.Setter;
 
