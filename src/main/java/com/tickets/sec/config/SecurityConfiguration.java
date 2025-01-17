@@ -3,6 +3,7 @@ package com.tickets.sec.config;
 import com.tickets.sec.filter.JwtFiltroAutenticacion;
 import com.tickets.sec.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,11 +29,13 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtFiltroAutenticacion jwtFiltroAutenticacion;
+    @Value("${origin.url}")
+    private String originUrl;
 
     @Override
     public void addCorsMappings(@SuppressWarnings("null") CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("${orgin.url}")
+                .allowedOrigins(originUrl)
                 .allowedMethods("*").allowedHeaders("*").allowCredentials(true);
     }
 
