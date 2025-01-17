@@ -27,6 +27,20 @@ public class JwtFiltroAutenticacion extends OncePerRequestFilter {
     private final CredencialesRepository credencialesRepository;
     private final UserDetailsServiceImpl userDetailsService;
 
+    /**
+     * Método que filtra las peticiones HTTP y verifica la validez de los tokens JWT.
+     * @see org.springframework.web.filter.OncePerRequestFilter
+     * @see com.tickets.sec.service.JwtService
+     * @see com.tickets.sec.repository.CredencialesRepository
+     * @see com.tickets.sec.service.UserDetailsServiceImpl
+     * 
+     * @param request Petición HTTP.
+     * @param response Respuesta HTTP.
+     * @param filterChain Cadena de filtros.
+     * 
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
