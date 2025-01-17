@@ -39,6 +39,16 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .allowedMethods("*").allowedHeaders("*").allowCredentials(true);
     }
 
+    /**
+     * Configuración de la autenticación de los usuarios.
+     * 
+     * Se especifica la clase encargada de manejar datos de los usuarios.
+     * @see com.tickets.sec.service.UserDetailsServiceImpl
+     * 
+     * Se especifica el cifrado de las contraseñas.
+     * 
+     * @return org.springframework.security.authentication.AuthenticationProvider
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -47,11 +57,33 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         return authProvider;
     }
 
+    /**
+     * Determina el cifrado de las contraseñas que será usado para la autenticación de usuarios.
+     * 
+     * @return org.springframework.security.crypto.password.PasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configuración de la seguridad general de las rutas de la aplicación.
+     * 
+     * Se especifica que las rutas de Swagger y de autenticación no requieren autenticación.
+     * 
+     * Se especifica que la sesión es sin estado.
+     * 
+     * Se especifica el proveedor de autenticación.
+     * @see SecurityConfiguration#authenticationProvider()
+     * 
+     * Se especifica el filtro de autenticación JWT para cada petición.
+     * @see com.tickets.sec.filter.JwtFiltroAutenticacion
+     * 
+     * @param http HttpSecurity
+     * @return org.springframework.security.web.SecurityFilterChain
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
