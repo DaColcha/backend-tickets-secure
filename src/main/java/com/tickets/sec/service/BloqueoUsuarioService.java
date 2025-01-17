@@ -20,6 +20,14 @@ public class BloqueoUsuarioService {
     @Autowired
     CredencialesRepository credencialesRepository;
 
+    /**
+     * Gestiona el inicio de sesión exitoso de un usuario.
+     * Restablece los intentos fallidos del usuario y elimina el tiempo de bloqueo.
+     * @see com.tickets.sec.model.Entity.Credenciales
+     * @see com.tickets.sec.repository.CredencialesRepository
+     * 
+     * @param credenciales Datos del usuario.
+     */
     public void gestionarInicioSesionExitoso(Credenciales credenciales) {
         if (credenciales != null) {
             credenciales.setIntentosInicioSesionFallidos(0);
@@ -28,6 +36,15 @@ public class BloqueoUsuarioService {
         }
     }
 
+    /**
+     * Gestiona el inicio de sesión fallido de un usuario.
+     * Incrementa el número de intentos fallidos del usuario y, si supera el máximo de intentos, bloquea al usuario durante
+     * el tiempo especificado en minutos en el archivo de propiedades.
+     * @see com.tickets.sec.model.Entity.Credenciales
+     * @see com.tickets.sec.repository.CredencialesRepository
+     * 
+     * @param credenciales Datos del usuario.
+     */
     public void gestionarInicioSesionFallido(Credenciales credenciales) {
         if (credenciales != null) {
             int intentosFallidos = credenciales.getIntentosInicioSesionFallidos() + 1;
@@ -41,6 +58,17 @@ public class BloqueoUsuarioService {
         }
     }
 
+    /**
+     * Verifica si un usuario está bloqueado.
+     * @see com.tickets.sec.model.Entity.Credenciales
+     * 
+     * En caso de que el usuario esté bloqueado, verifica si ha pasado el tiempo de bloqueo.
+     * Si ha pasado, restablece los intentos fallidos y elimina el tiempo de bloqueo.
+     * @see com.tickets.sec.repository.CredencialesRepository
+     * 
+     * @param credenciales Datos del usuario.
+     * @return boolean True si el usuario está bloqueado, false en caso contrario.
+     */
     public boolean verificarBloqueo(Credenciales credenciales) {
         if (credenciales != null && credenciales.getTiempoBloqueo() != null) {
             Instant tiempoBloqueo = credenciales.getTiempoBloqueo();
