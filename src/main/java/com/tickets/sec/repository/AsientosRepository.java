@@ -30,14 +30,15 @@ public interface AsientosRepository extends JpaRepository<AsientosNumerado, Inte
         public int totalVendidos();
 
         @Modifying
-        @Query("UPDATE AsientosNumerado an " +
-                "SET an.estado = 'D'" +
+        @Query(value = "UPDATE asientos_numerados an " +
+                "SET an.estado = 'D' " +
                 "WHERE an.id IN (" +
-                "    SELECT UNNEST(va.asientos)" +
-                "    FROM Venta v" +
-                "    JOIN VentasAsientosNumerado va ON v.ventaNumerada.id = va.id" +
-                "    WHERE v.tipoVenta = 'A')")
-        public void cleanAllSitsNoAbonate();
+                "    SELECT UNNEST(va.asientos) " +
+                "    FROM ventas v " +
+                "    JOIN ventas_asientos_numerados va ON v.venta_numerada = va.id " +
+                "    WHERE v.tipo_venta = 'A')",
+                nativeQuery = true)
+        void cleanAllSitsNoAbonate();
 
         @Modifying
         @Query("update AsientosNumerado set estado = 'D'")

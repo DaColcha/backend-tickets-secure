@@ -37,10 +37,11 @@ public interface VentaRepository extends JpaRepository<Venta, Integer> {
      * Método que devuelve todas las ventas de asientos numerados para Abonados según la localidad
      * @return
      */
-    @Query("SELECT DISTINCT Venta " +
-            "FROM Venta v " +
-            "JOIN VentasAsientosNumerado va ON v.ventaNumerada.id = va.id " +
-            "JOIN AsientosNumerado an ON an.id = ANY(va.asientos)" +
-            "WHERE an.localidad = ':localidad' and v.tipoVenta = 'A'")
+    @Query(value = "SELECT DISTINCT v.* " +
+            "FROM ventas v " +
+            "JOIN ventas_asientos_numerados va ON v.venta_numerada = va.id " +
+            "JOIN asientos_numerados an ON an.id = ANY(va.asientos) " +
+            "WHERE an.localidad = :localidad AND v.tipo_venta = 'A'",
+            nativeQuery = true)
     public List<Venta> findVentasAbonadosNumerados(@Name("localidad") String localidad);
 }
