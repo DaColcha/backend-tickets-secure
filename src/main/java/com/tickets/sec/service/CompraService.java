@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Clase que se encarga de procesar la compra de asientos numerados
+ */
 @Service
 @Slf4j
 public class CompraService {
@@ -32,6 +34,11 @@ public class CompraService {
     @Autowired
     private PagoRepository pagoRepository;
 
+    /**
+     * Método que procesa la compra de asientos numerados
+     * @param compra
+     * @return
+     */
     public CompraResponse procesarCompra(CompraNumerados compra) {
         //Buscamos los objetos tipo asiento según los seleccionados en la compra
         List<AsientosNumerado> seleccionados = asientoRepository.findSeleccionados(compra.getLocalidad(), compra.getZona(),
@@ -67,6 +74,7 @@ public class CompraService {
             venta.setAbonado(compra.getComprador());
             venta.setFechaVenta(java.time.LocalDate.now());
             venta.setTotalVenta(getTotalVenta(compra.getLocalidad(), compra.getTipo(), compra.getAsientosSeleccionados().size()));
+            venta.setTipoVenta(compra.getTipoCompra());
 
             ventaRepository.save(venta);
 
@@ -74,10 +82,23 @@ public class CompraService {
         }
     }
 
+    /**
+     * Método que calcula el total de la venta
+     * @param localidad
+     * @param tipo
+     * @param cantidad
+     * @return BigDecimal con el total de la venta
+     */
     public BigDecimal getTotalVenta (String localidad, String tipo, int cantidad){
         return java.math.BigDecimal.valueOf(getCostoAsiento(localidad, tipo) * cantidad);
     }
 
+    /**
+     * Método que obtiene el costo de un asiento
+     * @param localidad
+     * @param tipo
+     * @return double con el costo del asiento
+     */
     public double getCostoAsiento (String localidad, String tipo) {
             try {
                 return Double.parseDouble(String.valueOf(Constants.class.getField("PRECIO_" + localidad + "_" + tipo).get(null)));
@@ -87,11 +108,20 @@ public class CompraService {
             }
     }
 
+    /**
+     * Método que setea el estado de un asiento a ocupado
+     * @param asiento
+     */
     public void setAsientoOcupado (AsientosNumerado asiento){
         asiento.setEstado("N");
         asientoRepository.save(asiento);
     }
 
+    /**
+     * Método que verifica si la compra es de tipo abonado
+     * @param tipoCompra
+     * @return
+     */
     public boolean isAbonado (String tipoCompra){
         return tipoCompra.equals("A");
     }

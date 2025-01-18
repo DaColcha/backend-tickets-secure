@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * Controlador que maneja peticiones sobre SitioVenta
+ */
 @RestController
 @RequestMapping("/sitio-venta")
 @Slf4j
@@ -25,11 +28,20 @@ public class SitioVentaController {
     private SitioVentaRepository sitioVentaRepository;
 
 
+    /**
+     * Obtiene todos los sitios de venta
+     * @return Lista de sitios de venta
+     */
     @GetMapping
     public List<SitioVenta> getSitiosVenta() {
         return sitioVentaRepository.findAll();
     }
 
+    /**
+     * Crea un sitio de venta
+     * @param sitioVenta
+     * @return ResponseEntity con el resultado de la operacion
+     */
     @PreAuthorize("hasRole('admin')")
     @SuppressWarnings("null")
     @PostMapping("/crear")

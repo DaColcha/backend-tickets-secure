@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Clase que representa la respuesta de un pago
+ */
 @Getter
 @Setter
 public class PagoResponse {

@@ -2,6 +2,7 @@ package com.tickets.sec.service;
 
 import com.tickets.sec.model.Entity.Credenciales;
 import com.tickets.sec.repository.CredencialesRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,11 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * Clase que gestiona el bloqueo de un usuario.
+ */
 @Service
+@Slf4j
 public class BloqueoUsuarioService {
     @Value("${login.maximo-intentos}")
     private int maximoIntentos;
@@ -52,6 +57,7 @@ public class BloqueoUsuarioService {
 
             if (intentosFallidos >= maximoIntentos) {
                 credenciales.setTiempoBloqueo(Instant.now());
+                log.error("Usuario " + credenciales.getUsuario() + " ha agotado los intentos de inicio de sesión. Bloqueado por " + minutosBloqueo + " minutos.");
             }
 
             credencialesRepository.save(credenciales);
@@ -73,6 +79,7 @@ public class BloqueoUsuarioService {
         if (credenciales != null && credenciales.getTiempoBloqueo() != null) {
             Instant tiempoBloqueo = credenciales.getTiempoBloqueo();
             if (tiempoBloqueo.plus(Duration.ofMinutes(minutosBloqueo)).isAfter(Instant.now())) {
+                log.info("Intento de inicio de sesión de usuario bloqueado: " + credenciales.getUsuario());
                 return true;
             } else {
                 credenciales.setTiempoBloqueo(null);

@@ -6,6 +6,9 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+/**
+ * Clase que representa la información necesaria para realizar una compra general.
+ */
 @Getter
 @Setter
 public class CompraGeneral {

@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+/**
+ * Clase que representa la respuesta de un inicio de sesión
+ */
 @Getter
 @Setter
 public class LoginResponse {
@@ -15,8 +18,6 @@ public class LoginResponse {
     private String sitio;
     private String usuario;
     private String token;
-    public LoginResponse() {
-    }
 
     public LoginResponse(UUID id, String rol, String sitio, String usuario, String token) {
         this.rol = rol;

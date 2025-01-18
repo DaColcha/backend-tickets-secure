@@ -7,6 +7,9 @@ import lombok.Setter;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Clase que representa una compra de entradas numeradas
+ */
 @Getter
 @Setter
 public class CompraNumerados {
@@ -20,9 +23,6 @@ public class CompraNumerados {
     private String vendedor;
     private String formaPago;
     private UUID idPago;
-
-    public CompraNumerados() {
-    }
 
     public CompraNumerados(String zona, String tipo, List<Integer> asientosSeleccionados) {
         this.zona = zona;

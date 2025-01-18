@@ -6,6 +6,9 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Clase que proporciona métodos para encriptar y desencriptar cadenas de texto.
+ */
 @Service
 public class EncriptacionService {
 

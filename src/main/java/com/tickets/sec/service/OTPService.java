@@ -9,17 +9,22 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Servicio para generar y validar códigos OTP
+ */
 @Service
 @Slf4j
 public class OTPService {
     @Autowired
     private OtpRepository otpRepository;
 
+    /**
+     * Generar y almacenar un nuevo código OTP para un usuario
+     * @param username
+     * @return OTP
+     */
     public String generateOTP(String username) {
         String otp = String.format("%06d", new SecureRandom().nextInt(1000000));
 
@@ -34,7 +39,12 @@ public class OTPService {
         return otp;
     }
 
-    // Validar el OTP
+    /**
+     * Valida el OTP proporcionado para un usuario
+     * @param username
+     * @param otp
+     * @return boolean
+     */
     @Transactional
     public boolean validateOTP(String username, String otp) {
         Optional<OTP> otpEntity = otpRepository.findTopByUsernameOrderByIdDesc(username);

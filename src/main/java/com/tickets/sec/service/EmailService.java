@@ -8,6 +8,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servicio para enviar correos electrónicos.
+ */
 @Service
 @Slf4j
 public class EmailService {
@@ -15,6 +18,11 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    /**
+     * Envía un correo electrónico con el código OTP.
+     * @param toEmail
+     * @param otp
+     */
     public void sendEmail(String toEmail, String otp) {
 
         try {
@@ -31,6 +39,11 @@ public class EmailService {
         }
     }
 
+    /**
+     * Construye el cuerpo del correo electrónico.
+     * @param otp
+     * @return
+     */
     private String buildEmailBody(String otp) {
         return "<h1>Tu código de verificación para acceder a TicketPlay </h1>"
                 + "<p>Tu código OTP es: <strong>" + otp + "</strong></p>"

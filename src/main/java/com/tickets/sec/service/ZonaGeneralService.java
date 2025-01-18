@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
+/**
+ * Clase que se encarga de gestionar las ventas de boletos de la zona general
+ */
 @Service
 @Slf4j
 public class ZonaGeneralService {
@@ -31,11 +33,20 @@ public class ZonaGeneralService {
     @Autowired
     private VentasZonaGeneralRepository ventasZonaGeneralRepository;
 
-
+    /**
+     * Método que regresa la cantidad de boletos disponibles en la zona general
+     * @param zona
+     * @return
+     */
     public Integer getDisponibles(String zona) {
         return zonaGeneralRepository.findByLocalidad(zona).getDisponibles();
     }
 
+    /**
+     * Método que procesa la compra de boletos de la zona general
+     * @param compra
+     * @return
+     */
     public CompraResponse procesarCompraGeneral(CompraGeneral compra){
 
         VentasZonaGeneral ventaGeneral = new VentasZonaGeneral();
@@ -73,18 +84,37 @@ public class ZonaGeneralService {
         }
     }
 
+    /**
+     * Método que verifica si hay suficientes boletos en la zona general
+     * @param zona
+     * @param cantidad
+     * @return
+     */
     private boolean verificarDisponibilidad(String zona, Integer cantidad){
         return getDisponibles(zona) >= cantidad;
     }
 
+    /**
+     * Método que verifica si la compra es de un abonado
+     * @param tipoCompra
+     * @return
+     */
     private boolean isAbonado(String tipoCompra){
         return tipoCompra.equals("A");
     }
 
+    /**
+     * Método que calcula el total de la compra
+     * @param cantidad
+     * @return
+     */
     public BigDecimal calcularTotal(Integer cantidad){
         return new BigDecimal(cantidad * Constants.PRECIO_GENERAL);
     }
 
+    /**
+     * Método que limpia la zona general
+     */
     public void limpiarGeneral(){
         Integer boletosA = this.getTotalAbonadosByZona("A");
         Integer boletosB = this.getTotalAbonadosByZona("B");
@@ -97,10 +127,18 @@ public class ZonaGeneralService {
 
     }
 
+    /**
+     * Método que regresa el total de abonados en una zona
+     * @param zona
+     * @return
+     */
     private Integer getTotalAbonadosByZona(String zona){
         return ventaRepository.totalAbonadosGeneralVendido(zona);
     }
 
+    /**
+     * Método que limpia la zona general
+     */
     public void limpiarTodo(){
         zonaGeneralRepository.restartGeneral();
     }

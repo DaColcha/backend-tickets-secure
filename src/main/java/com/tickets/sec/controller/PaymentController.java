@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Controlador que maneja las peticiones de pago
+ */
 @RestController
 @RequestMapping("/payment")
 @Slf4j
@@ -27,9 +30,17 @@ public class PaymentController {
     @Autowired
     private PagoService pagoService;
 
+    /**
+     * Metodo que procesa el pago de una compra
+     * @see TokenizationService#createToken(PaymentData)
+     * @see PagoService#procesarPago(String, BigDecimal, boolean, String)
+     *
+     * @param cardData Información de la tarjeta de crédito(encriptada) y el monto a procesar
+     * @return ResponseEntity<PagoResponse> Respuesta de éxito o de fallo en el proceso de pago
+     * con el id de pago que debe proceder a registrar la compra.
+     */
     @PostMapping()
     public ResponseEntity<PagoResponse> tokenize(@RequestBody PaymentData cardData) {
-
 
         try{
             String token = tokenizationService.createToken(cardData);

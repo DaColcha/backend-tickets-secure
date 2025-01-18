@@ -32,11 +32,21 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     @Value("${origin.url}")
     private String originUrl;
 
+    /**
+     * Configuración del CORS.
+     *
+     * Se especifica el origen permitido para las peticiones usando una variable de entorno.
+     * Se permiten los métodos GET, POST, PUT y PATCH.
+     * Se permite el envío de cookies y de cabeceras.
+     *
+     */
     @Override
     public void addCorsMappings(@SuppressWarnings("null") CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(originUrl)
-                .allowedMethods("*").allowedHeaders("*").allowCredentials(true);
+                .allowedMethods("GET", "POST", "PUT", "PATCH")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 
     /**

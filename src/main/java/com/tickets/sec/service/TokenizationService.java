@@ -19,6 +19,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
+/**
+ * Servicio para la creación y validación de tokens de pago.
+ */
 @Service
 @Slf4j
 public class TokenizationService {
@@ -32,6 +35,11 @@ public class TokenizationService {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * Crea un token de pago a partir de los datos de pago encriptados.
+     * @param encryptedData
+     * @return
+     */
     public String createToken(PaymentData encryptedData) {
 
         if(encryptedData.getUseCard()) {
@@ -60,6 +68,12 @@ public class TokenizationService {
         return token;
     }
 
+    /**
+     * Valida un token de pago y devuelve los datos del token.
+     * @param token
+     * @return
+     * @throws TokenException
+     */
     public TokenData validateAndGetToken(String token) throws TokenException {
         TokenData tokenData = tokenRepository.findByToken(token);
 
@@ -74,11 +88,20 @@ public class TokenizationService {
         return tokenData;
     }
 
+    /**
+     * Genera un token seguro.
+     * @return
+     */
     private String generateSecureToken() {
-        return UUID.randomUUID().toString() +
+        return UUID.randomUUID() +
                 RandomStringUtils.randomAlphanumeric(32);
     }
 
+    /**
+     * Valida los datos de la tarjeta.
+     * @param tarjeta
+     * @throws CardValidationException
+     */
     private void validateCard(Tarjeta tarjeta) throws CardValidationException {
 
         if (!isValidCardNumber(tarjeta.getNumero())) {
@@ -94,6 +117,11 @@ public class TokenizationService {
         }
     }
 
+    /**
+     * Valida el número de tarjeta de crédito.
+     * @param cardNumber
+     * @return
+     */
     public boolean isValidCardNumber(String cardNumber) {
         int sum = 0;
         boolean alternate = false;
@@ -110,6 +138,11 @@ public class TokenizationService {
         return (sum % 10 == 0);
     }
 
+    /**
+     * Valida la fecha de vencimiento de la tarjeta.
+     * @param expiryDate
+     * @return
+     */
     public boolean isValidExpiryDate(String expiryDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
         try {

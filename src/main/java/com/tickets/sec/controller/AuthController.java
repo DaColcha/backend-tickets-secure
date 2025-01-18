@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Clase controladora que maneja las rutas de autenticación.
+ */
 @RestController
 @RequestMapping("/auth")
 @Slf4j
@@ -44,6 +47,13 @@ public class AuthController {
         }
     }
 
+    /**
+     * Método que registra la ruta "/verify-otp" y recibe un código OTP para validar el inicio de sesión.
+     * @see com.tickets.sec.service.OTPService
+     *
+     * @param request Objeto tipo OTPRequest que contiene el nombre de usuario y el código OTP.
+     * @return ResponseEntity<LoginResponse> Respuesta de inicio de sesión con el token generado.
+     */
     @PostMapping("/verify-otp")
     public ResponseEntity<LoginResponse> verifyOTP(@RequestBody OTPRequest request) {
         boolean isValid = otpService.validateOTP(request.getUsername(), request.getOtp());

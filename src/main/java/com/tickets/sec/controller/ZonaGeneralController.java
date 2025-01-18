@@ -31,6 +31,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * Controlador para la zona general
+ */
 @RestController
 @RequestMapping("/zona-general")
 @Slf4j
@@ -41,11 +44,21 @@ public class ZonaGeneralController {
     @Autowired
     private PagoService pagoService;
 
+    /**
+     * Obtiene la disponibilidad de asientos en General según la zona
+     * @param zona Zona de la que se desea obtener la disponibilidad
+     * @return Cantidad de asientos disponibles en la zona
+     */
     @GetMapping("/{zona}")
     public Integer getDisponibilidad(@PathVariable String zona) {
         return zonaGeneralService.getDisponibles(zona);
     }
 
+    /**
+     * Realiza la compra de un asiento en la zona general
+     * @param compra Información a procesar de la compra general
+     * @return Respuesta con resultado de la operación
+     */
     @PostMapping("/compra")
     public ResponseEntity<CompraResponse> compraGeneralAbonado(@RequestBody CompraGeneral compra) {
 
@@ -62,7 +75,10 @@ public class ZonaGeneralController {
         }
     }
 
-
+    /**
+     * Modifica el conteo de asientos disponibles en la zona general
+     * @return Resultado de la operación
+     */
     @Transactional
     @PatchMapping("/limpiar-todo")
     public ResponseEntity<String> limpiarTodo() {
@@ -71,6 +87,10 @@ public class ZonaGeneralController {
         return ResponseEntity.ok("Limpieza exitosa");
     }
 
+    /**
+     * Modifica el conteo de asientos disponibles en la zona general ignorando los asientos de abonados
+     * @return Resultado de la operación
+     */
     @Transactional
     @PatchMapping("/limpiar")
     public ResponseEntity<String> limpiarGeneral() {

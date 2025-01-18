@@ -12,18 +12,12 @@ public interface AsientosRepository extends JpaRepository<AsientosNumerado, Inte
 
         public List<AsientosNumerado> findByLocalidadAndZonaAndTipo(String localidad, String zona, String tipo);
 
-        @Query("SELECT a FROM AsientosNumerado a WHERE a.localidad = :localidad  AND a.estado = 'N'")
-        public List<AsientosNumerado> findAbonadoByLocalidad(@Name("localidad") String localidad);
-
         @Query("SELECT a FROM AsientosNumerado a WHERE a.localidad = :localidad AND a.zona = :zona AND a.tipo = :tipo AND a.numero IN :num_asiento")
         public List<AsientosNumerado> findSeleccionados(@Name("localidad") String localidad, @Name("zona") String zona,
                         @Name("tipo") String tipo, @Name("num_asiento") List<Integer> num_asiento);
 
-        @Query("SELECT a FROM AsientosNumerado a WHERE a.estado = 'N'")
-        public List<AsientosNumerado> findAbonados();
-
-        @Query("SELECT COUNT(*) FROM AsientosNumerado a WHERE a.estado = 'N'")
-        public Integer totalAbonados();
+        @Query("SELECT a FROM AsientosNumerado a WHERE a.id IN :id")
+        public List<AsientosNumerado> findByIdList(@Name("id") List<Integer> id);
 
         @Query("SELECT COUNT(*) FROM AsientosNumerado WHERE localidad = :localidad AND zona = :zona AND tipo = :tipo AND estado ='D'")
         public int zoneAvailable(@Name("localidad") String localidad, @Name("zona") String zona,
@@ -36,19 +30,17 @@ public interface AsientosRepository extends JpaRepository<AsientosNumerado, Inte
         public int totalVendidos();
 
         @Modifying
-        @Query("update AsientosNumerado set estado = 'D' where localidad = :localidad and zona = :zona and tipo = :tipo and numero IN :num_asiento")
-        public void cleanSitNoAbonate(@Name("localidad") String localidad, @Name("zona") String zona,
-                        @Name("tipo") String tipo, @Name("num_asiento") List<Integer> num_asiento);
-
-        //TODO: Cambiar el estado de todos los asientos QUE NO FUERON COMPRADOS POR ABONADOS a Disponible
+        @Query("UPDATE AsientosNumerado an " +
+                "SET an.estado = 'D'" +
+                "WHERE an.id IN (" +
+                "    SELECT UNNEST(va.asientos)" +
+                "    FROM Venta v" +
+                "    JOIN VentasAsientosNumerado va ON v.ventaNumerada.id = va.id" +
+                "    WHERE v.tipoVenta = 'A')")
+        public void cleanAllSitsNoAbonate();
 
         @Modifying
         @Query("update AsientosNumerado set estado = 'D'")
         public void cleanAllSits();
-
-        @Modifying
-        @Query("update AsientosNumerado set estado = 'D' where localidad = :localidad and zona = :zona and tipo = :tipo and numero IN :numeros")
-        public void cleanAbonadoSits(@Name("localidad") String localidad, @Name("zona") String zona,
-                        @Name("tipo") String tipo, @Name("num_asiento") List<Integer> numeros);
 
 }

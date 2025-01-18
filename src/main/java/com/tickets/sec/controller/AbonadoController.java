@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * Controlador para la gestión de clientes abonados
+ */
 @RestController
 @RequestMapping("/clientes")
 @Slf4j
 public class AbonadoController {
+
 
     @Autowired
     private AbonadoService abonadoService;
@@ -29,6 +33,12 @@ public class AbonadoController {
         return abonadoService.findAll();
     }
 
+    /**
+     * Valida si un cliente abonado existe en la base de datos
+     *
+     * @param cedula Cédula del cliente abonado
+     * @return ResponseEntity con el cliente abonado si existe, o un ResponseEntity vacío.
+     */
     @GetMapping("/validar")
     public ResponseEntity<AbonadoResponse> getAbonadoById(@RequestBody String cedula) {
         AbonadoResponse cliente = abonadoService.findByCedula(cedula);
@@ -42,6 +52,12 @@ public class AbonadoController {
         return ResponseEntity.ok().body(cliente);
     }
 
+    /**
+     * Crea un nuevo cliente abonado en la base de datos
+     *
+     * @param cliente Cliente abonado a crear
+     * @return ResponseEntity con el cliente abonado creado
+     */
     @PostMapping("/crear")
     public ResponseEntity<Abonado> createAbonado(@RequestBody Abonado cliente) {
         Abonado creado = abonadoService.guardarAbonado(cliente);

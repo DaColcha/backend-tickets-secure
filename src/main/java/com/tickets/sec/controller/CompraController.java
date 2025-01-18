@@ -1,25 +1,19 @@
 package com.tickets.sec.controller;
 
 import com.tickets.sec.dto.CompraResponse;
-import com.tickets.sec.dto.PagoResponse;
-import com.tickets.sec.model.Entity.TokenData;
 import com.tickets.sec.service.CompraService;
-import com.tickets.sec.service.PagoService;
-import com.tickets.sec.service.TokenizationService;
-import com.tickets.sec.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.tickets.sec.dto.CompraNumerados;
-
-import java.math.BigDecimal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * Clase que controla las peticiones de compra de asientos numerados
+ */
 @RestController
 @RequestMapping("/compra")
 @Slf4j
@@ -28,9 +22,14 @@ public class CompraController {
     @Autowired
     private CompraService compraService;
 
-    @Autowired
-    private PagoService pagoService;
-
+    /**
+     * Metodo que procesa la compra de asientos numerados
+     * @see CompraService#procesarCompra(CompraNumerados)
+     * @see CompraNumerados
+     *
+     * @param compra Información de la compra a registrarse
+     * @return ResponseEntity<CompraResponse> Respuesta de éxito o de fallo en el proceso de compra.
+     */
     @PostMapping
     public ResponseEntity<CompraResponse> saveCompra(@RequestBody CompraNumerados compra) {
 

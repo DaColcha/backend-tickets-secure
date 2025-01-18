@@ -3,6 +3,9 @@ package com.tickets.sec.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Clase que representa una tarjeta de crédito
+ */
 @Getter
 @Setter
 public class Tarjeta {

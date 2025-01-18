@@ -45,6 +45,9 @@ public class Venta {
     @Column(name = "total_venta", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalVenta;
 
+    @Column(name = "tipo_venta", nullable = false)
+    private String tipoVenta;
+
     public Venta() {
     }
 

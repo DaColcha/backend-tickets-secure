@@ -90,7 +90,7 @@ public class PagoService {
 
     private String procesamientoEntidad(TokenData tokenData, BigDecimal amount) {
         // Simulación de procesamiento
-        // Aquí iría la integración real con el procesador de pagoss
+        // Aquí se implementaría la integración real con el procesador de pagoss
         return "TX-" + System.currentTimeMillis();
     }
 

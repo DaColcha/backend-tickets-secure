@@ -3,6 +3,9 @@ package com.tickets.sec.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Clase que representa un reporte general de boletos disponibles y vendidos.
+ */
 @Getter
 @Setter
 public class ReporteGeneral {

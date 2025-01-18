@@ -4,6 +4,9 @@ import com.tickets.sec.model.Entity.TokensJwtExpirados;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+/**
+ * Repositorio de TokensJwtExpirados.
+ */
 public interface TokensJwtExpiradosRepository extends JpaRepository<TokensJwtExpirados, String> {
 
     /**

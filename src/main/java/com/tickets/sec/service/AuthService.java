@@ -9,6 +9,7 @@ import com.tickets.sec.repository.CredencialesRepository;
 import com.tickets.sec.repository.CredencialesSitioRepository;
 import com.tickets.sec.repository.TokensJwtExpiradosRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +17,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Clase que gestiona la autenticación de los usuarios en el backend.
+ */
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -81,26 +86,37 @@ public class AuthService {
                     String otp = otpService.generateOTP(credencialesResponse.getUsuario());
                     emailService.sendEmail(credencialesResponse.getEmail(), otp);
 
+
                     return LOGIN_EXITOSO;
                 } catch (AuthenticationException e) {
                     bloqueoUsuarioService.gestionarInicioSesionFallido(credencialesResponse);
 
+                    log.info("Inicio de sesión fallido para el usuario: " + loginRequest.getUsuario());
                     return LOGIN_FALLIDO_CREDENCIALES;
                 }
             } else {
+                log.info("El usuario " + loginRequest.getUsuario() +
+                        "ha agotado sus intentos de inicio de sesión, cuenta bloqueada temporalmente.");
                 return LOGIN_FALLIDO_BLOQUEO;
             }
         } else {
+            log.info("Inicio de sesión fallido para el usuario: " + loginRequest.getUsuario());
             return LOGIN_FALLIDO_CREDENCIALES;
         }
     }
 
+    /**
+     * Método que confirma el inicio de sesión de un usuario y genera un token JWT.
+     * @param usuario
+     * @return com.tickets.sec.dto.LoginResponse Datos de inicio de sesión.
+     */
     public LoginResponse confirmLogin(String usuario) {
         Credenciales credenciales = credencialesRepository.findFirstByUsuario(usuario);
 
         CredencialesSitio info = credencialesSitioRepository.findByCredencialId(credenciales.getId());
 
         String jwtToken = jwtService.generarToken(credenciales);
+        log.info("Se ha generado un token JWT para el usuario: " + usuario);
 
         return new LoginResponse(
                 credenciales.getId(),
@@ -127,6 +143,7 @@ public class AuthService {
 
         String usuario = jwtService.extraerUsuario(token);
 
+
         if (usuario != null) {
             Credenciales credenciales = credencialesRepository.findFirstByUsuario(usuario);
             TokensJwtExpirados tokenExpirado = new TokensJwtExpirados();
@@ -134,9 +151,10 @@ public class AuthService {
             tokenExpirado.setCredenciales(credenciales);
             tokensJwtExpiradosRepository.save(tokenExpirado);
             SecurityContextHolder.clearContext();
+            log.info("El usuario " + usuario + " ha cerrado la sesión.");
             return true;
         }
-
+        log.error("El token proporcionado es inválido." );
         return false;
 
     }

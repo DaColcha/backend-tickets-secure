@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * Controlador para la gestión de Asientos Numerados
+ */
 @Slf4j
 @RestController
 @RequestMapping("/asiento")
@@ -36,46 +39,45 @@ public class AsientoController {
     @Autowired
     private VentaRepository ventaRepository;
 
+    /**
+     * Obtiene los asientos por localidad, zona y tipo
+     *
+     * @param localidad T - Tribuna, C - Cancha
+     * @param zona     A0/A1/A2, B0/B1/B2, C0, D0
+     * @param tipo      SILLAS, BUTACA, GRADAS
+     * @return List<AsientosNumerado> lista de asientos que corresponden a los parámetros.
+     */
     @GetMapping("/{localidad}/{zona}/{tipo}")
     public List<AsientosNumerado> getSitsByZone(@PathVariable String localidad, @PathVariable String zona,
             @PathVariable String tipo) {
         return asientoRepository.findByLocalidadAndZonaAndTipo(localidad, zona, tipo);
     }
 
+    /**
+     * Obtiene la cantidad de asientos disponibles por localidad, zona y tipo
+     *
+     * @param localidad T - Tribuna, C - Cancha
+     * @param zona     A0/A1/A2, B0/B1/B2, C0, D0
+     * @param tipo      SILLAS, BUTACA, GRADAS
+     * @return int cantidad de asientos disponibles
+     */
     @GetMapping("/{localidad}/{zona}/{tipo}/disponible")
     public int getAvailableSitsByZone(@PathVariable String localidad, @PathVariable String zona,
             @PathVariable String tipo) {
         return asientoRepository.zoneAvailable(localidad, zona, tipo);
     }
 
-    @PreAuthorize("hasRole('admin')")
-    @SuppressWarnings("null")
-    @PostMapping("/create-sits")
-    public ResponseEntity<AsientosNumerado> createSits(@RequestBody List<AsientosNumerado> asientos) {
-        asientoRepository.saveAll(asientos);
-        return ResponseEntity.ok().build();
-    }
-
-    @PreAuthorize("hasRole('admin')")
-    @Transactional
-    @PatchMapping("/limpiar-no-abonado")
-    public ResponseEntity<String> clearSitNoAbonated(@RequestBody CompraNumerados compraNoAbonado) {
-
-        asientoRepository.cleanSitNoAbonate(compraNoAbonado.getLocalidad(),
-                compraNoAbonado.getZona(),
-                compraNoAbonado.getTipo(),
-                compraNoAbonado.getAsientosSeleccionados());
-
-        return ResponseEntity.ok("Asientos eliminados ");
-    }
-
+    /**
+     * Modifica el estado de los asientos que NO hayan sido comprados por Abonados a Disponible
+     *
+     * @return ResponseEntity<String> con mensaje de éxito
+     */
     @PreAuthorize("hasRole('admin')")
     @Transactional
     @PatchMapping("/limpiar")
     public ResponseEntity<String> clearAllSitsNoAbonated() {
 
-        //TODO:LIMPIAR ASIENTOS NUMERADOS DE NO ABONADOS
-        //asientoRepository.cleanAllSitsNoAbonate();
+        asientoRepository.cleanAllSitsNoAbonate();
 
         Integer boletosA = ventaRepository.totalAbonadosGeneralVendido("A");
         Integer boletosB = ventaRepository.totalAbonadosGeneralVendido("B");
@@ -90,6 +92,11 @@ public class AsientoController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Modifica el estado de todos los asientos a Disponible
+     *
+     * @return ResponseEntity<String> con mensaje de éxito
+     */
     @PreAuthorize("hasRole('admin')")
     @Transactional
     @PatchMapping("/limpiar-todo")

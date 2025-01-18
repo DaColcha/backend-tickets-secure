@@ -3,6 +3,9 @@ package com.tickets.sec.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Clase que representa la información de inicio de sesión
+ */
 @Getter
 @Setter
 public class Login {
@@ -10,11 +13,4 @@ public class Login {
     private String usuario;
     private String contrasena;
 
-    public Login() {
-    }
-
-    public Login(String usuario, String contrasena) {
-        this.usuario = usuario;
-        this.contrasena = contrasena;
-    }
 }
