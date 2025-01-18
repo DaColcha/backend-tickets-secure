@@ -36,7 +36,7 @@ public class PaymentController {
      * @see PagoService#procesarPago(String, BigDecimal, boolean, String)
      *
      * @param cardData Información de la tarjeta de crédito(encriptada) y el monto a procesar
-     * @return ResponseEntity<PagoResponse> Respuesta de éxito o de fallo en el proceso de pago
+     * @return Respuesta de éxito o de fallo en el proceso de pago
      * con el id de pago que debe proceder a registrar la compra.
      */
     @PostMapping()

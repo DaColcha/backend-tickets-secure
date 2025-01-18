@@ -1,0 +1,12 @@
+com.tickets.sec
+com.tickets.sec.config
+com.tickets.sec.controller
+com.tickets.sec.dto
+com.tickets.sec.exceptions
+com.tickets.sec.filter
+com.tickets.sec.model.Entity
+com.tickets.sec.model.Reports
+com.tickets.sec.repository
+com.tickets.sec.repository.ReportRepository
+com.tickets.sec.service
+com.tickets.sec.utils

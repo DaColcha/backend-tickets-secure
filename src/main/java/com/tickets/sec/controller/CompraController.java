@@ -28,7 +28,7 @@ public class CompraController {
      * @see CompraNumerados
      *
      * @param compra Información de la compra a registrarse
-     * @return ResponseEntity<CompraResponse> Respuesta de éxito o de fallo en el proceso de compra.
+     * @return Respuesta de éxito o de fallo en el proceso de compra.
      */
     @PostMapping
     public ResponseEntity<CompraResponse> saveCompra(@RequestBody CompraNumerados compra) {

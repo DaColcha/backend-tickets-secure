@@ -45,7 +45,7 @@ public class AsientoController {
      * @param localidad T - Tribuna, C - Cancha
      * @param zona     A0/A1/A2, B0/B1/B2, C0, D0
      * @param tipo      SILLAS, BUTACA, GRADAS
-     * @return List<AsientosNumerado> lista de asientos que corresponden a los parámetros.
+     * @return Lista de asientos que corresponden a los parámetros.
      */
     @GetMapping("/{localidad}/{zona}/{tipo}")
     public List<AsientosNumerado> getSitsByZone(@PathVariable String localidad, @PathVariable String zona,
@@ -70,7 +70,7 @@ public class AsientoController {
     /**
      * Modifica el estado de los asientos que NO hayan sido comprados por Abonados a Disponible
      *
-     * @return ResponseEntity<String> con mensaje de éxito
+     * @return Mensaje de éxito
      */
     @PreAuthorize("hasRole('admin')")
     @Transactional
@@ -95,7 +95,7 @@ public class AsientoController {
     /**
      * Modifica el estado de todos los asientos a Disponible
      *
-     * @return ResponseEntity<String> con mensaje de éxito
+     * @return Mensaje de éxito
      */
     @PreAuthorize("hasRole('admin')")
     @Transactional

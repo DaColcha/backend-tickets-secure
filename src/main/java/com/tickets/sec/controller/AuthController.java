@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @Slf4j
 public class AuthController {
-
     @Autowired
     private AuthService authService;
 
@@ -32,7 +31,7 @@ public class AuthController {
      * 
      * @param credenciales Datos de inicio de sesión.
      * 
-     * @return org.springframework.http.ResponseEntity<String> Respuesta de inicio de sesión.
+     * @return Respuesta de inicio de sesión.
      */
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Login credenciales) {
@@ -48,11 +47,12 @@ public class AuthController {
     }
 
     /**
+     *
      * Método que registra la ruta "/verify-otp" y recibe un código OTP para validar el inicio de sesión.
      * @see com.tickets.sec.service.OTPService
      *
      * @param request Objeto tipo OTPRequest que contiene el nombre de usuario y el código OTP.
-     * @return ResponseEntity<LoginResponse> Respuesta de inicio de sesión con el token generado.
+     * @return Respuesta de inicio de sesión con el token generado.
      */
     @PostMapping("/verify-otp")
     public ResponseEntity<LoginResponse> verifyOTP(@RequestBody OTPRequest request) {
@@ -74,7 +74,7 @@ public class AuthController {
      * 
      * @param authHeader Encabezado de autorización.
      * 
-     * @return org.springframework.http.ResponseEntity<?> Respuesta de cierre de sesión.
+     * @return Respuesta de cierre de sesión.
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
