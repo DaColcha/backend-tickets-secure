@@ -28,7 +28,7 @@ El orden en que deben ser ejecutados es el siguiente:
 
 6. Con la base de datos lista, ejecuta los siguientes comandos para iniciar el proyecto en modo desarrollo
     ```
-    mvn clean install 
+    mvn clean compile
     mvn spring-boot:run
     ```
 
@@ -36,4 +36,4 @@ El orden en que deben ser ejecutados es el siguiente:
 Si necesitas trabajar con un puerto diferente, modificalo en el archivo __resources/application.properties__
 
 ### Documentación 📖
-Para acceder a la documentación de la API, ingresa a 
+Para acceder a la documentación accede a este [enlace⛓️‍💥](https://calm-bay-035f02c10.4.azurestaticapps.net)
