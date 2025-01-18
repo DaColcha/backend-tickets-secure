@@ -17,6 +17,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private CredencialesRepository credencialesRepository;
 
+    /**
+     * Método que carga los datos de un usuario en base a su nombre de usuario.
+     * 
+     * @see com.tickets.sec.repository.CredencialesRepository
+     * 
+     * @param usuario Nombre de usuario.
+     * @return org.springframework.security.core.userdetails.UserDetails
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String usuario) throws UsernameNotFoundException {
         Credenciales credenciales = credencialesRepository.findFirstByUsuario(usuario);
