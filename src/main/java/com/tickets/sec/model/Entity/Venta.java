@@ -45,13 +45,14 @@ public class Venta {
     @Column(name = "total_venta", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalVenta;
 
-    @Column(name = "tipo_venta", nullable = false)
+    @Column(name = "tipo_venta")
     private String tipoVenta;
 
     public Venta() {
     }
 
-    public Venta(VentasAsientosNumerado ventaNumerada, VentasZonaGeneral ventaZonaGeneral, Pago pago, CredencialesSitio vendedor, Abonado abonado, LocalDate fechaVenta, BigDecimal totalVenta) {
+    public Venta(VentasAsientosNumerado ventaNumerada, VentasZonaGeneral ventaZonaGeneral,
+                 Pago pago, CredencialesSitio vendedor, Abonado abonado, LocalDate fechaVenta, BigDecimal totalVenta, String tipoVenta) {
         this.ventaNumerada = ventaNumerada;
         this.ventaZonaGeneral = ventaZonaGeneral;
         this.pago = pago;
@@ -59,5 +60,6 @@ public class Venta {
         this.abonado = abonado;
         this.fechaVenta = fechaVenta;
         this.totalVenta = totalVenta;
+        this.tipoVenta = tipoVenta;
     }
 }

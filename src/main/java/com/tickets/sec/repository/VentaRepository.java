@@ -16,9 +16,8 @@ public interface VentaRepository extends JpaRepository<Venta, Integer> {
      * Método que devuelve todas las ventas de tipo Abonado General
      * @return
      */
-    @Query("SELECT Venta" +
-            "    FROM Venta v" +
-            "    WHERE v.tipoVenta = 'A' AND v.ventaZonaGeneral IS NOT NULL AND v.ventaNumerada IS NULL")
+    @Query(value = "SELECT * from ventas v \n" +
+            "where tipo_venta = 'A' and v.venta_zona_general IS NOT NULL;", nativeQuery = true)
     public List<Venta> findVentasAbonadosGeneral();
 
     /**
@@ -41,7 +40,7 @@ public interface VentaRepository extends JpaRepository<Venta, Integer> {
             "FROM ventas v " +
             "JOIN ventas_asientos_numerados va ON v.venta_numerada = va.id " +
             "JOIN asientos_numerados an ON an.id = ANY(va.asientos) " +
-            "WHERE an.localidad = :localidad AND v.tipo_venta = 'A'",
+            "WHERE an.localidad = :localidad AND v.\"tipo_venta\" = 'A';",
             nativeQuery = true)
     public List<Venta> findVentasAbonadosNumerados(@Name("localidad") String localidad);
 }
